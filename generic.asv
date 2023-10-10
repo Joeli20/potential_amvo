@@ -29,11 +29,13 @@ N = length(l_p);
 
 % Calculate normal vectors
 normal = [-diff(nodes(2, :)); diff(nodes(1, :))];
-normal = -normal ./ vecnorm(normal);
+normal = normal ./ vecnorm(normal);
 
 % Calculate tangent vectors
 tangent = [diff(nodes(1, :)); diff(nodes(2, :))];
 tangent = tangent ./ vecnorm(tangent);
+
+quiver(puntmig(1,i),puntmig())
 
 % Optionally, plot the geometry along with the middle points
 figure;
@@ -45,4 +47,3 @@ title('Geometria parametritzada');
 xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
-quiver(puntmig(1,:),puntmig(2,:),normal(1,:),normal(2,:));

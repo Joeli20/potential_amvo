@@ -21,6 +21,7 @@ normal_vectors = normal_vectors ./ vecnorm(normal_vectors);
 tangent_vectors = [diff(nodal_points(1, :)); diff(nodal_points(2, :))];
 tangent_vectors = tangent_vectors ./ vecnorm(tangent_vectors);
 
+
 % Plot the geometry of the cylinder with nodal and control points
 figure;
 plot(nodal_points(1, [1:end, 1]), nodal_points(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
