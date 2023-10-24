@@ -1,12 +1,11 @@
-function [V_f,P_f] = ViP_fons(Q_inf,N,alpha,l_p,nodes)
+function [V_f,P_f] = ViP_fons(Q_inf,alpha,l_p,nodes,n)
 
-a = zeros(N,N);
-b = zeros(N,1);
-sigma = zeros(N,1);
+a = zeros(size(n,2),size(n,2));
+b = zeros(size(n,2),1);
+sigma = zeros(size(n,2),1);
 
-for i = 1:N
-    for j = 1:N
-        n(i) = [sin(alpha(i)); cos(alpha(i))];
+for i = 1:size(n,2)
+    for j = 1:size(n,2)
         b(i,1) = -Q_inf*n(i);
         if i ~= j
             x_pan(1,j) = (x_ci-nodes(1,j))*cos(alpha(i))-(z_ci-nodes(2,j))*sin(alpha(i));
