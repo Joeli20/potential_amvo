@@ -35,6 +35,10 @@ normal = -normal ./ vecnorm(normal);
 tangent = [diff(nodes(1, :)); diff(nodes(2, :))];
 tangent = tangent ./ vecnorm(tangent);
 
+for i = 1:N
+    alpha_i(i) = atan2(normal(1,i),normal(2,i)); %Repassar perquè al refer conversio canvien signes
+end
+
 % Optionally, plot the geometry along with the middle points
 figure;
 plot(x, z, 'bo-', 'LineWidth', 2);
