@@ -1,13 +1,13 @@
-clear all; clc;
+clear; clc;
 
 % Specify the file path for the geometry coordinates text file
-file = 'naca_parameters.txt';
+file = fullfile("Airfoil_data_files/NACA_0010_N_64_coord.txt");
 
 % Read the geometry coordinates from the text file
 data = importdata(file);
 
-nodal_points(1,:) = data(:,1);
-nodal_points(2,:) = -data(:,2);
+nodal_points(1,:) = data(:,2);
+nodal_points(2,:) = data(:,3);
 
 for i= 1:(length(nodal_points)-1)
         longitud_panel(i,1) = sqrt((nodal_points(1,i+1)-nodal_points(1,i))^2+(nodal_points(2,i)-nodal_points(2,i+1))^2);
@@ -44,3 +44,18 @@ xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
 quiver(control_points(1,:),control_points(2,:),vector_normal(1,:),vector_normal(2,:));
+
+
+
+% Integral of convective term, x and y components.
+%
+% Written by: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
+% Group 16. AMVO. MUEA.
+%
+% Inputs:
+%   u: Matrix of the horitzontal velocity components
+%   v: Matrix of the vertical velocity components
+%   L: length of a side of the analysed square
+% Outputs:
+%   u_conv_num: Solution of the convective terms of horitzontal velocity
+%   v_conv_num: Solution of the convective terms of vertical velocity
