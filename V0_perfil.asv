@@ -1,17 +1,16 @@
-clear; clc; close;
+clear; clc;
 
 % Specify the file path for the geometry coordinates text file
-e = 0;
-while e~=1
+
+while e = 1;
 panells = "Number of divisions (16,32,64,128,256,512):";
 N = input(panells);
 
 if N~=16 && N~=32 && N~=64 && N~=128 && N~=256 && N~=512
-    clc;
-    disp("Number of divisions not valid. Please enter a correct value.");
-else
     e = 1;
+    error("Number of divisions not valid. Please enter a correct value")
 end
+if N==16 && N==32 && N==64 && N=128 && N~=256 && N~=512
 end
 
 data = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
