@@ -4,7 +4,7 @@ clear all; clc;
 % Define cylinder parameters
 cylinder_radius = 1.0;
 cylinder_center = [0, 0];
-num_panels = 20; % Number of panels
+num_panels = 32; % Number of panels
 
 % Create parametric values for the cylinder
 theta = linspace(0, 2 * pi, num_panels + 1); % Angles
@@ -24,7 +24,7 @@ for i= 1:(length(nodal_points)-1)
         vector_tangent(2,i) = -sinus(1,i);
 end
 
-[V_final,Cp, a_ii, sigma, V] = ViP_fons(10,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
+[V_final,Cp, a_ii, sigma, V] = ViP_fons(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
 
 
 % Plot the geometry of the cylinder with nodal and control points
