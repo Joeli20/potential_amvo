@@ -8,9 +8,11 @@ valor_sum=zeros(size(normal,2),1);
 for i = 1:size(normal,2)
     for j = 1:size(normal,2)
         b(i,1) = -Q_inf*normal(1,i);
-        if i ~= j
+        if i == j
+            a(i,j) = 1/2;
+        else
             x_pan(i,j) = (center(1,i)-nodes(1,j))*cosinus(1,j)-(center(2,i)-nodes(2,j))*sinus(1,j);
-            z_pan(i,j) = (center(1,i)-nodes(1,j))*sinus(1,j)-(center(2,i)-nodes(2,j))*cosinus(1,j);
+            z_pan(i,j) = (center(1,i)-nodes(1,j))*sinus(1,j)+(center(2,i)-nodes(2,j))*cosinus(1,j);
             r1(i,j) = sqrt(x_pan(i,j).^2+z_pan(i,j).^2);
             r2(i,j) = sqrt((x_pan(i,j)-l_p(j,1)).^2+z_pan(i,j).^2);
             u_ind_p(i,j) = 1/(4*pi)*log((r1(i,j).^2)/(r2(i,j).^2)); 
@@ -22,9 +24,7 @@ for i = 1:size(normal,2)
             V(i,j) = sqrt(u_ind_global(i,j).^2 +w_ind_global(i,j).^2);
             a(i,j) = u_ind_global(i,j)*sinus(1,i)+w_ind_global(i,j)*cosinus(1,i);
         end
-        if i == j
-            a(i,j) = 1/2;
-        end
+
     end
 
 end
