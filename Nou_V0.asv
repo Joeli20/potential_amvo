@@ -57,28 +57,22 @@ ylabel('z');
 legend('Node', 'Punt mig');
 quiver(control_points(1,:),control_points(2,:),vector_normal(1,:),vector_normal(2,:));
 
-angle_distribution = zeros(1,N);
-for i = 1:N
-angle_distribution(1,i)= (360/N)*(i-1);
-end
-
 figure;
-plot(angle_distribution,sigma);
-title('Sigma vs angle');
-xlabel('angle º');
+plot(1:N,sigma);
+title('Geometria parametritzada');
+xlabel('x');
 ylabel('sigma');
 legend('sigma');
 
+angle_distribution = zeros(1,N);
+for i = 0:N-1
+angle_distribution(1,i)= (360/N)*i;
+end
 figure;
 plot(angle_distribution,V_final);
-title('Velocity vs angle');
-xlabel('angle º');
-ylabel('Velocity');
-legend('Velocity');
-
-figure;
+hold on;
 plot(angle_distribution,Cp);
-title('Cp vs angle');
-xlabel('angle º');
-ylabel('Cp');
-legend('Cp');
+title('V');
+xlabel('x');
+ylabel('sigma');
+legend('sigma');

@@ -1,4 +1,4 @@
-function [V_f,P_f,a, sigma, V] = ViP_fons(Q_inf,cosinus,sinus,l_p,nodes,center,normal)
+function [V_f,P_f,a, sigma] = ViP_fons(Q_inf,cosinus,sinus,l_p,nodes,center,normal)
 
 a = zeros(size(normal,2),size(normal,2));
 b = zeros(size(normal,2),1);
