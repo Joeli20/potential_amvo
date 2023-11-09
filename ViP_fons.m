@@ -7,7 +7,7 @@ valor_sum=zeros(size(normal,2),1);
 
 for i = 1:size(normal,2)
     for j = 1:size(normal,2)
-        b(i,1) = -Q_inf*normal(i);
+        b(i,1) = -Q_inf*normal(1,i);
         if i ~= j
             x_pan(i,j) = (center(1,i)-nodes(1,j))*cosinus(1,j)-(center(2,i)-nodes(2,j))*sinus(1,j);
             z_pan(i,j) = (center(1,i)-nodes(1,j))*sinus(1,j)-(center(2,i)-nodes(2,j))*cosinus(1,j);
