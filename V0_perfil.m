@@ -1,4 +1,6 @@
-clear; clc; close;
+clear;
+clc;
+close all;
 
 % Specify the file path for the geometry coordinates text file
 e = 0;
