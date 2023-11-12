@@ -19,6 +19,14 @@ end
 data = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
 file = fullfile(data);
 
+% Preallocating for speed
+longitud_panel = zeros(N,1);
+control_points = zeros(2,N);
+cosinus = zeros(1,N);
+sinus = zeros(1,N);
+vector_normal = zeros(2,N);
+vector_tangent = zeros(2,N);
+
 % Read the geometry coordinates from the text file
 data = importdata(file);
 
@@ -37,6 +45,7 @@ for i= 1:(length(nodal_points)-1)
         vector_tangent(2,i) = -sinus(1,i);
 end
 
+[V_final,Cp, a_ii, sigma] = ViP_fons(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
 
 % Plot the geometry of the cylinder with nodal and control points
 figure;
@@ -60,8 +69,6 @@ xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
 quiver(control_points(1,:),control_points(2,:),vector_normal(1,:),vector_normal(2,:));
-
-
 
 % Integral of convective term, x and y components.
 %

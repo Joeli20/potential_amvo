@@ -33,7 +33,6 @@ end
 
 [V_final,Cp, a_ii, sigma] = ViP_fons(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
 
-
 % Plot the geometry of the cylinder with nodal and control points
 figure;
 plot(nodal_points(1, [1:end, 1]), nodal_points(2, [1:end, 1]), 'bo-', 'LineWidth', 2);

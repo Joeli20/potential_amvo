@@ -111,7 +111,6 @@ for i= 1:(length(nodal_points_flap)-1)
         vector_tangent_flap(2,i) = -sinus_flap(1,i);
 end
 
-
 % Plot the geometry of the surface with nodal and control points
 figure;
 plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
@@ -139,3 +138,9 @@ ylabel('z');
 legend('Node', 'Punt mig');
 quiver(control_points_airfoil(1,:),control_points_airfoil(2,:),vector_normal_airfoil(1,:),vector_normal_airfoil(2,:));
 quiver(control_points_flap(1,:),control_points_flap(2,:),vector_normal_flap(1,:),vector_normal_flap(2,:));
+
+% figure;
+% plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), '-', 'LineWidth', 2);
+% hold on
+% plot(nodal_points_flap(1, [1:end, 1]), nodal_points_flap(2, [1:end, 1]), '-', 'LineWidth', 2);
+% axis equal
