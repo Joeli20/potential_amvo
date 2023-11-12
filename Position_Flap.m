@@ -29,7 +29,6 @@ cosinus = zeros(1,N);
 sinus = zeros(1,N);
 vector_normal = zeros(2,N);
 vector_tangent = zeros(2,N);
-nodal_points = zeros(2,(N+1)*2);
 
 % Read the geometry coordinates from the text file
 data_airfoil = importdata(file_airfoil);
