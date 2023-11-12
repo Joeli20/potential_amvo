@@ -49,15 +49,15 @@ nodal_points_flap(2,:) = data_flap(:,3);
 c_airfoil = 1;
 c_flap = 0.45;
 gap = 0.05; %Distance between trailing edge (airfoil) and leading edge (flap)
-delta_flap = 4; %In degrees
+delta_flap = 45; %In degrees
 
 % Escalar
 nodal_points_airfoil(:,:) = nodal_points_airfoil(:,:)*c_airfoil;
-nodal_points_flap(:,:) = nodal_points_flap(:,:)*c_flap;
+nodal_points_flap_0(:,:) = nodal_points_flap(:,:)*c_flap;
 
 % Posicionar + Rotar flap
-nodal_points_flap(2,:) = nodal_points_flap(2,:) - sind(delta_flap)*(gap + nodal_points_flap(1,:)); % Y component
-nodal_points_flap(1,:) = c_airfoil + cosd(delta_flap)*(gap + nodal_points_flap(1,:));% X component
+nodal_points_flap(2,:) = nodal_points_flap_0(2,:)*cosd(delta_flap) - sind(delta_flap)*(gap + nodal_points_flap_0(1,:)); % Y component
+nodal_points_flap(1,:) = c_airfoil + cosd(delta_flap)*(gap + nodal_points_flap_0(1,:)) + sind(delta_flap)*nodal_points_flap_0(2,:);% X component
 
 % Calculations AIRFOIL
 
