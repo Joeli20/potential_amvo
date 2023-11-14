@@ -16,9 +16,10 @@ function [v_f,cp,a,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_
 % Outputs:
 %   v_f: Module of final velocity
 %   cp: Pressure coefficient
-%   sigma: Strenght
+%   sigma: Sources strenght
 %   a: DELETE
 
+% Preallocating
 a = zeros(size(vec_n,2),size(vec_n,2));
 b = zeros(size(vec_n,2),1);
 valor_sum=zeros(size(vec_n,2),1);

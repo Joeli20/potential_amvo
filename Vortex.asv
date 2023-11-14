@@ -1,4 +1,4 @@
-function [v_f,v_x,v_z,cp,cl,cl_nod,L,cm_0,cm_0_nod,a,gamma] = Vortex(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_t)
+function [v_f,v_x,v_z,cp,cL,cl,L,cM_0,cm_0,a,gamma] = Vortex(Q_inf, AoA, cosinus,sinus,l_p,nodes,center,tangent)
 % Vortex strenght calculation
 %
 % Written by: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
@@ -17,32 +17,26 @@ function [v_f,v_x,v_z,cp,cl,cl_nod,L,cm_0,cm_0_nod,a,gamma] = Vortex(Q_inf,AoA,c
 % Outputs:
 %   v_f: Module of final velocity
 %   v_x: X component of the Velocity 
-%   v_z: Z component of the Velocity 
-%   cp: Pressure coefficient
-%   cl: Lift coefficient
-%   cm_0: Free moment coefficient
-%   gamma: Vortex strenght
-%   cl_nod: DELETE
-%   L: DELETE
-%   cm_0_nod: DELETE
+
+%   sigma: Strenght
 %   a: DELETE
 
 % Preallocating
-a = zeros(size(vec_t,2),size(vec_t,2));
-b = zeros(size(vec_t,2),1);
-cm_0_nod = zeros(size(vec_t,2),1);
-trigger1 = size(vec_t,2);
+a = zeros(size(tangent,2),size(tangent,2));
+b = zeros(size(tangent,2),1);
+cm_0 = zeros(size(tangent,2),1);
+trigger1 = size(tangent,2);
 V_inf(1,1) = Q_inf*cosd(AoA);
 V_inf(1,2) = Q_inf*sind(AoA);
 
-for i = 1:size(vec_t,2)
-    for j = 1:size(vec_t,2)
-        b(i,1) = -(V_inf(1,1)*vec_t(1,i)+V_inf(1,2)*vec_t(2,i));
+for i = 1:size(tangent,2)
+    for j = 1:size(tangent,2)
+        b(i,1) = -(V_inf(1,1)*tangent(1,i)+V_inf(1,2)*tangent(2,i));
         if i == j
             a(i,j) = -1/2;
         else
-            x_pan(i,j) = (center(1,i)-node(1,j))*cosinus(1,j)-(center(2,i)-node(2,j))*sinus(1,j);
-            z_pan(i,j) = (center(1,i)-node(1,j))*sinus(1,j)+(center(2,i)-node(2,j))*cosinus(1,j);
+            x_pan(i,j) = (center(1,i)-nodes(1,j))*cosinus(1,j)-(center(2,i)-nodes(2,j))*sinus(1,j);
+            z_pan(i,j) = (center(1,i)-nodes(1,j))*sinus(1,j)+(center(2,i)-nodes(2,j))*cosinus(1,j);
             r1(i,j) = sqrt(x_pan(i,j).^2+z_pan(i,j).^2);
             r2(i,j) = sqrt((x_pan(i,j)-l_p(j,1)).^2+z_pan(i,j).^2);
             w_ind_p(i,j) = 1/(4*pi)*log((r2(i,j).^2)/(r1(i,j).^2)); 
@@ -68,16 +62,16 @@ end
     gamma = a\b;
     gamma(k,1) = (gamma(k-1,1)+gamma(k+1,1))/2;
 
-for i = 1:size(vec_t,2)
-    v_x(i) = gamma(i)*vec_t(1,i);
-    v_z(i) = gamma(i)*vec_t(2,i);
+for i = 1:size(tangent,2)
+    v_x(i) = gamma(i)*tangent(1,i);
+    v_z(i) = gamma(i)*tangent(2,i);
     v_f(i) = abs(gamma(i));
     cp(i) = 1-(gamma(i)/Q_inf)^2;
-    cl_nod(i) = (2*gamma(i).*l_p(i,1))./(Q_inf*1);
+    cl(i) = (2*gamma(i).*l_p(i,1))./(Q_inf*1);
     L_rara(i) = (gamma(i).*l_p(i,1));
-    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/1^2).*(((center(1,i)-1/4)*(node(1,i+1)-node(1,i)))+(center(2,i)*(node(2,i+1)-node(2,i))));
+    cm_0(i) = cm_0(i)+(cp(i)/1^2).*(((center(1,i)-1/4)*(nodes(1,i+1)-nodes(1,i)))+(center(2,i)*(nodes(2,i+1)-nodes(2,i))));
 end
 L = sum(L_rara)*Q_inf;
-cl = sum(cl_nod);
-cm_0 = sum(cm_0_nod);
+cL = sum(cl);
+cM_0 = sum(cm_0);
 end
