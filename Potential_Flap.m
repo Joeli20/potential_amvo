@@ -2,6 +2,7 @@ clear;
 clc;
 close all;
 
+%% DATA INPUT
 % Specify the file path for the geometry coordinates text file
 e = 0;
 while e~=1
@@ -16,133 +17,144 @@ else
 end
 end
 
-clear e; clear panells; % Maintaining Workspace Clean
+clear e; clear panells; % Maintaining Workspace clean
 
-data_airfoil = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
-file_airfoil = fullfile(data_airfoil);
+data_m = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
+file_m = fullfile(data_m); % Subindex _m means Main Airfoil
 
-data_flap = "Airfoil_data_files/NACA_0015_N_"+N+"_coord.txt";
-file_flap = fullfile(data_flap);
-
-% Preallocating for speed
-longitud_panel_airfoil = zeros(N,1);
-control_points_airfoil = zeros(2,N);
-cosinus_airfoil = zeros(1,N);
-sinus_airfoil = zeros(1,N);
-vector_normal_airfoil = zeros(2,N);
-vector_tangent_airfoil = zeros(2,N);
-
-longitud_panel_flap = zeros(N,1);
-control_points_flap = zeros(2,N);
-cosinus_flap = zeros(1,N);
-sinus_flap = zeros(1,N);
-vector_normal_flap = zeros(2,N);
-vector_tangent_flap = zeros(2,N);
+data_f = "Airfoil_data_files/NACA_0015_N_"+N+"_coord.txt";
+file_f = fullfile(data_f); % Subindex _f means Flap Airfoil
 
 % Read the geometry coordinates from the text file
-data_airfoil = importdata(file_airfoil);
-nodal_points_airfoil(1,:) = data_airfoil(:,2);
-nodal_points_airfoil(2,:) = data_airfoil(:,3);
+data_m = importdata(file_m);
+node_m(1,:) = data_m(:,2);
+node_m(2,:) = data_m(:,3);
 
-data_flap = importdata(file_flap);
-nodal_points_flap(1,:) = data_flap(:,2);
-nodal_points_flap(2,:) = data_flap(:,3);
+data_f = importdata(file_f);
+node_f(1,:) = data_f(:,2);
+node_f(2,:) = data_f(:,3);
 
-c_airfoil = 1;
-c_flap = 0.45;
-gap = 0.05; %Distance between trailing edge (airfoil) and leading edge (flap)
-delta_flap = 45; %In degrees
+clear data_m; clear data_f; % Maintaining Workspace clean
+clear file_m; clear file_f; % Maintaining Workspace clean
 
-% Escalar
-nodal_points_airfoil(:,:) = nodal_points_airfoil(:,:)*c_airfoil;
-nodal_points_flap_0(:,:) = nodal_points_flap(:,:)*c_flap;
+%% PREALLOCATING
+l_p_m = zeros(N,1);
+control_m = zeros(2,N);
+cosinus_m = zeros(1,N);
+sinus_m = zeros(1,N);
+vec_n_m = zeros(2,N);
+vec_t_m = zeros(2,N);
 
-% Posicionar + Rotar flap
-nodal_points_flap(2,:) = nodal_points_flap_0(2,:)*cosd(delta_flap) - sind(delta_flap)*(gap + nodal_points_flap_0(1,:)); % Y component
-nodal_points_flap(1,:) = c_airfoil + cosd(delta_flap)*(gap + nodal_points_flap_0(1,:)) + sind(delta_flap)*nodal_points_flap_0(2,:);% X component
+l_p_f = zeros(N,1);
+control_f = zeros(2,N);
+cosinus_f = zeros(1,N);
+sinus_f = zeros(1,N);
+vec_n_f = zeros(2,N);
+vec_t_f = zeros(2,N);
 
-% Calculations AIRFOIL
+%% PARAMETERS DEFINITION
+% Geometry
+c_m = 1;
+c_f = 0.45;
+gap = 0.05; % distance between trailing edge (airfoil) and leading edge (flap)
+delta_f = 45; % in degrees
 
-for i= 1:(length(nodal_points_airfoil)-1)
-        longitud_panel_airfoil(i,1) = sqrt((nodal_points_airfoil(1,i+1)-nodal_points_airfoil(1,i))^2+(nodal_points_airfoil(2,i)-nodal_points_airfoil(2,i+1))^2);
-        control_points_airfoil(1,i) = (nodal_points_airfoil(1,i+1)+nodal_points_airfoil(1,i))*0.5;
-        control_points_airfoil(2,i) = (nodal_points_airfoil(2,i)+nodal_points_airfoil(2,i+1))*0.5;
-        cosinus_airfoil(1,i) = (nodal_points_airfoil(1,i+1)-nodal_points_airfoil(1,i))/longitud_panel_airfoil(i,1);
-        sinus_airfoil(1,i) = (nodal_points_airfoil(2,i)-nodal_points_airfoil(2,i+1))/longitud_panel_airfoil(i,1);
-        vector_normal_airfoil(1,i) = sinus_airfoil(1,i);
-        vector_normal_airfoil(2,i) = cosinus_airfoil(1,i);
-        vector_tangent_airfoil(1,i) = cosinus_airfoil(1,i);
-        vector_tangent_airfoil(2,i) = -sinus_airfoil(1,i);
+% Fluid
+Q_inf = 1; % in m/s
+AoA = 0; % in degrees
+
+%% GEOMETRY PREVIOUS CALCULATIONS
+% Scalate
+node_m(:,:) = node_m(:,:)*c_m;
+node_f_0(:,:) = node_f(:,:)*c_f;
+
+% Flap positioning + rotation
+    % Y component
+node_f(2,:) = node_f_0(2,:)*cosd(delta_f) - sind(delta_f)*(gap + node_f_0(1,:));
+    % X component
+node_f(1,:) = c_m + cosd(delta_f)*(gap + node_f_0(1,:)) + sind(delta_f)*node_f_0(2,:);
+
+clear node_f_0;
+
+%% AIRFOIL
+
+for i= 1:(length(node_m)-1)
+        l_p_m(i,1) = sqrt((node_m(1,i+1)-node_m(1,i))^2+(node_m(2,i)-node_m(2,i+1))^2);
+        control_m(1,i) = (node_m(1,i+1)+node_m(1,i))*0.5;
+        control_m(2,i) = (node_m(2,i)+node_m(2,i+1))*0.5;
+        cosinus_m(1,i) = (node_m(1,i+1)-node_m(1,i))/l_p_m(i,1);
+        sinus_m(1,i) = (node_m(2,i)-node_m(2,i+1))/l_p_m(i,1);
+        vec_n_m(1,i) = sinus_m(1,i);
+        vec_n_m(2,i) = cosinus_m(1,i);
+        vec_t_m(1,i) = cosinus_m(1,i);
+        vec_t_m(2,i) = -sinus_m(1,i);
 end
+clear i;
 
+%% FLAP
 
-% Plot the geometry of the surface with nodal and control points
+for i= 1:(length(node_f)-1)
+        l_p_f(i,1) = sqrt((node_f(1,i+1)-node_f(1,i))^2+(node_f(2,i)-node_f(2,i+1))^2);
+        control_f(1,i) = (node_f(1,i+1)+node_f(1,i))*0.5;
+        control_f(2,i) = (node_f(2,i)+node_f(2,i+1))*0.5;
+        cosinus_f(1,i) = (node_f(1,i+1)-node_f(1,i))/l_p_f(i,1);
+        sinus_f(1,i) = (node_f(2,i)-node_f(2,i+1))/l_p_f(i,1);
+        vec_n_f(1,i) = sinus_f(1,i);
+        vec_n_f(2,i) = cosinus_f(1,i);
+        vec_t_f(1,i) = cosinus_f(1,i);
+        vec_t_f(2,i) = -sinus_f(1,i);
+end
+clear i;
+
+%% PLOTTING
+
+% Airfoil geometry
 figure;
-plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
+plot(node_m(1, [1:end, 1]), node_m(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
 hold on;
-plot(control_points_airfoil(1, :), control_points_airfoil(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+plot(control_m(1, :), control_m(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
 axis equal;
 title('Cylinder Geometry with Nodal and Control Points');
 xlabel('X');
 ylabel('Y');
 legend('Nodal Points', 'Control Points');
 
-% Optionally, plot the geometry along with the middle points
+% Airfoil vectors
 figure;
-plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
+plot(node_m(1, [1:end, 1]), node_m(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
 hold on;
-plot(control_points_airfoil(1, :), control_points_airfoil(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+plot(control_m(1, :), control_m(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
 axis equal;
 title('Geometria parametritzada');
 xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
-quiver(control_points_airfoil(1,:),control_points_airfoil(2,:),vector_normal_airfoil(1,:),vector_normal_airfoil(2,:));
+quiver(control_m(1,:),control_m(2,:),vec_n_m(1,:),vec_n_m(2,:));
 
-% Calculations FLAP
-
-for i= 1:(length(nodal_points_flap)-1)
-        longitud_panel_flap(i,1) = sqrt((nodal_points_flap(1,i+1)-nodal_points_flap(1,i))^2+(nodal_points_flap(2,i)-nodal_points_flap(2,i+1))^2);
-        control_points_flap(1,i) = (nodal_points_flap(1,i+1)+nodal_points_flap(1,i))*0.5;
-        control_points_flap(2,i) = (nodal_points_flap(2,i)+nodal_points_flap(2,i+1))*0.5;
-        cosinus_flap(1,i) = (nodal_points_flap(1,i+1)-nodal_points_flap(1,i))/longitud_panel_flap(i,1);
-        sinus_flap(1,i) = (nodal_points_flap(2,i)-nodal_points_flap(2,i+1))/longitud_panel_flap(i,1);
-        vector_normal_flap(1,i) = sinus_flap(1,i);
-        vector_normal_flap(2,i) = cosinus_flap(1,i);
-        vector_tangent_flap(1,i) = cosinus_flap(1,i);
-        vector_tangent_flap(2,i) = -sinus_flap(1,i);
-end
-
-% Plot the geometry of the surface with nodal and control points
+% Airfoil + Flap geometry
 figure;
-plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
+plot(node_m(1, [1:end, 1]), node_m(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
 hold on;
-plot(control_points_airfoil(1, :), control_points_airfoil(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
-plot(nodal_points_flap(1, [1:end, 1]), nodal_points_flap(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
-plot(control_points_flap(1, :), control_points_flap(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+plot(control_m(1, :), control_m(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+plot(node_f(1, [1:end, 1]), node_f(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
+plot(control_f(1, :), control_f(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
 axis equal;
 title('Airfoil + Flap Geometry with Nodal and Control Points');
 xlabel('X');
 ylabel('Y');
 legend('Nodal Points', 'Control Points');
 
-% Optionally, plot the geometry along with the middle points
+% Airfoil + Flap vectors
 figure;
-plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
+plot(node_m(1, [1:end, 1]), node_m(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
 hold on;
-plot(control_points_airfoil(1, :), control_points_airfoil(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
-plot(nodal_points_flap(1, [1:end, 1]), nodal_points_flap(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
-plot(control_points_flap(1, :), control_points_flap(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+plot(control_m(1, :), control_m(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+plot(node_f(1, [1:end, 1]), node_f(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
+plot(control_f(1, :), control_f(2, :), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
 axis equal;
 title('Geometria parametritzada');
 xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
-quiver(control_points_airfoil(1,:),control_points_airfoil(2,:),vector_normal_airfoil(1,:),vector_normal_airfoil(2,:));
-quiver(control_points_flap(1,:),control_points_flap(2,:),vector_normal_flap(1,:),vector_normal_flap(2,:));
-
-% figure;
-% plot(nodal_points_airfoil(1, [1:end, 1]), nodal_points_airfoil(2, [1:end, 1]), '-', 'LineWidth', 2);
-% hold on
-% plot(nodal_points_flap(1, [1:end, 1]), nodal_points_flap(2, [1:end, 1]), '-', 'LineWidth', 2);
-% axis equal
+quiver(control_m(1,:),control_m(2,:),vec_n_m(1,:),vec_n_m(2,:));
+quiver(control_f(1,:),control_f(2,:),vec_n_f(1,:),vec_n_f(2,:));
