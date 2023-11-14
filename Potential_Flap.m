@@ -54,7 +54,7 @@ vec_t_f = zeros(2,N);
 
 %% PARAMETERS DEFINITION
 % Geometry
-c_a = 1;
+c_m = 1;
 c_f = 0.45;
 gap = 0.05; % distance between trailing edge (airfoil) and leading edge (flap)
 delta_f = 45; % in degrees
@@ -65,14 +65,14 @@ AoA = 0; % in degrees
 
 %% GEOMETRY PREVIOUS CALCULATIONS
 % Scalate
-node_m(:,:) = node_m(:,:)*c_a;
+node_m(:,:) = node_m(:,:)*c_m;
 node_f_0(:,:) = node_f(:,:)*c_f;
 
 % Flap positioning + rotation
     % Y component
 node_f(2,:) = node_f_0(2,:)*cosd(delta_f) - sind(delta_f)*(gap + node_f_0(1,:));
     % X component
-node_f(1,:) = c_a + cosd(delta_f)*(gap + node_f_0(1,:)) + sind(delta_f)*node_f_0(2,:);
+node_f(1,:) = c_m + cosd(delta_f)*(gap + node_f_0(1,:)) + sind(delta_f)*node_f_0(2,:);
 
 clear node_f_0;
 
