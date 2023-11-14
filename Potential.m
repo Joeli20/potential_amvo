@@ -39,7 +39,7 @@ vec_t = zeros(2,N);
 
 %% PARAMETERS DEFINITION
 % Geometry
-c_a = 1;
+c = 1;
 
 % Fluid
 Q_inf = 1; % in m/s
@@ -47,7 +47,7 @@ AoA = 0; % in degrees
 
 %% GEOMETRY PREVIOUS CALCULATIONS
 % Scalate
-node(:,:) = node(:,:)*c_a;
+node(:,:) = node(:,:)*c;
 
 %% AIRFOIL
 
