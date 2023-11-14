@@ -42,8 +42,8 @@ vec_t = zeros(2,N);
 c = 1;
 
 % Fluid
-Q_inf = 1; % in m/s
-AoA = 0; % in degrees
+%Q_inf = 1; % in m/s
+%AoA = 5; % in degrees
 
 %% GEOMETRY PREVIOUS CALCULATIONS
 % Scalate
@@ -64,8 +64,20 @@ for i= 1:(length(node)-1)
 end
 clear i;
 
-[v_f,cp,a_ii,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,control,vec_n);
-
+%[v_f,cp,a_ii,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,control,vec_n);
+%% APARTAT 1
+Q_inf = 1; % in m/s
+AoA = [2 4 6 8 10]
+for i = 1:length(AoA)
+[V_f, Vx, Vz, Cp, Cl, Cm_0, gamma] = Vortex(Q_inf,AoA(i),cosinus,sinus,l_p,node,control, vec_t, c);
+V_f_1(i,:) = V_f;
+Vx_1(i,:) = Vx;
+Vz_1(i,:) = Vz;
+Cp_1(i,:) = Cp;
+Cl_1(i) = Cl;
+Cm_0_1(i) = Cm_0;
+gamma_1(i,:) = gamma;
+end
 %% PLOTTING
 
 % Airfoil geometry
