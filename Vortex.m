@@ -12,8 +12,7 @@ function [v_f,v_x,v_z,cp,cl,cl_nod,L,cm_0,cm_0_nod,a,gamma] = Vortex(Q_inf,AoA,c
 %   l_p: Lenght of every panel
 %   node: Position of every node
 %   center: Position of the center point of a panel
-%   vec_n: Normal vector
-%   vec_t
+%   vec_t: Tangent vector
 % Outputs:
 %   v_f: Module of final velocity
 %   v_x: X component of the Velocity 
