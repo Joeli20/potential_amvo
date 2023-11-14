@@ -1,14 +1,17 @@
-function [V_f,P_f,a, gamma] = Vortex(Q_inf,cosinus,sinus,l_p,nodes,center,normal, tangent)
+function [V_f_modul,V_x,V_z,Cp_f,CL,Cl,L, CM0, Cm_0, a, gamma] = Vortex(Q_inf, AoA, cosinus,sinus,l_p,nodes,center,normal, tangent)
 
 a = zeros(size(normal,2),size(normal,2));
 b = zeros(size(normal,2),1);
 gamma = zeros(size(normal,2),1);
-valor_sum=zeros(size(normal,2),1);
+Cm_0 = zeros(size(normal,2),1);
 trigger1 = size(normal,2);
+V_inf(1,1) = Q_inf*cosd(AoA);
+V_inf(1,2) = Q_inf*sind(AoA);
+CL=0;
 
 for i = 1:size(normal,2)
     for j = 1:size(normal,2)
-        b(i,1) = -Q_inf*tangent(1,i);
+        b(i,1) = -(V_inf(1,1)*tangent(1,i)+V_inf(1,2)*tangent(2,i));
         if i == j
             a(i,j) = -1/2;
         else
@@ -38,13 +41,18 @@ end
 
 
     gamma = a\b;
-    %gamma(k,1) = (gamma(k-1,1)+gamma(k+1,1))/2;
+    gamma(k,1) = (gamma(k-1,1)+gamma(k+1,1))/2;
 
 for i = 1:size(normal,2)
-    for j = 1:size(normal,2)
-        valor_sum(i) = valor_sum(i)+gamma(i)*V(i,j);
-    end
-    V_f(i) = Q_inf+valor_sum(i);
-    P_f(i) = 1-((V_f(i)).^2)./(Q_inf^2);
+    V_x(i) = gamma(i)*tangent(1,i);
+    V_z(i) = gamma(i)*tangent(2,i);
+    V_f_modul(i) = abs(gamma(i));
+    Cp_f(i) = 1-(gamma(i)/Q_inf)^2;
+    Cl(i) = (2*gamma(i).*l_p(i,1))./(Q_inf*1);
+    L_rara(i) = (gamma(i).*l_p(i,1));
+    Cm_0(i) = Cm_0(i)+(Cp_f(i)/1^2).*(((center(1,i)-1/4)*(nodes(1,i+1)-nodes(1,i)))+(center(2,i)*(nodes(2,i+1)-nodes(2,i))));
 end
+L = sum(L_rara)*Q_inf;
+CL = sum(Cl);
+CM0 = sum(Cm_0);
 end

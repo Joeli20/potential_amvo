@@ -1,9 +1,12 @@
 clear; clc; close all;
 
 % Define cylinder parameters
-cylinder_radius = 1.0;
+cylinder_radius = 0.5;
 cylinder_center = [0, 0];
-N = 32; % Number of panels
+N = 250; % Number of panels
+
+Qinf=2;
+AoA=6;
 
 % Create parametric values for the cylinder
 theta = linspace(0, 2 * pi, N + 1); % Angles
@@ -32,7 +35,7 @@ for i= 1:(length(nodal_points)-1)
 end
 
 [V_final,Cp, a_ii, sigma] = Sources(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
-[V_final_vortex,Cp_vortex, a_ii_vortex, gamma] = Vortex(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal, vector_tangent);
+[V_final_vortex, Vx, Vz, Cp_vortex,CL_perfil, C_l_cada_punt, Lift, CMO, Cm_0, a_ii_vortex, gamma] = Vortex(Qinf,AoA,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal, vector_tangent);
 % Plot the geometry of the cylinder with nodal and control points
 figure;
 plot(nodal_points(1, [1:end, 1]), nodal_points(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
