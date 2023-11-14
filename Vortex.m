@@ -1,4 +1,4 @@
-function [V_f,P_f,a, gamma] = ViP_vortex (Q_inf,cosinus,sinus,l_p,nodes,center,normal, tangent)
+function [V_f,P_f,a, gamma] = Vortex(Q_inf,cosinus,sinus,l_p,nodes,center,normal, tangent)
 
 a = zeros(size(normal,2),size(normal,2));
 b = zeros(size(normal,2),1);

@@ -45,7 +45,7 @@ for i= 1:(length(nodal_points)-1)
         vector_tangent(2,i) = -sinus(1,i);
 end
 
-[V_final,Cp, a_ii, sigma] = ViP_fons(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
+[V_final,Cp, a_ii, sigma] = Sources(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
 
 % Plot the geometry of the cylinder with nodal and control points
 figure;

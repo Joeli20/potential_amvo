@@ -31,8 +31,8 @@ for i= 1:(length(nodal_points)-1)
         vector_tangent(2,i) = -sinus(1,i);
 end
 
-[V_final,Cp, a_ii, sigma] = ViP_fons(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
-[V_final_vortex,Cp_vortex, a_ii_vortex, gamma] = ViP_vortex(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal, vector_tangent);
+[V_final,Cp, a_ii, sigma] = Sources(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal);
+[V_final_vortex,Cp_vortex, a_ii_vortex, gamma] = Vortex(1,cosinus,sinus,longitud_panel,nodal_points,control_points,vector_normal, vector_tangent);
 % Plot the geometry of the cylinder with nodal and control points
 figure;
 plot(nodal_points(1, [1:end, 1]), nodal_points(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
