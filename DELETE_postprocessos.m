@@ -39,6 +39,14 @@ close all;
 % Minf2 = Mcr2-0.10;
 % Minf3 = Mcr2-0.05;
 % Minf4 = Mcr2;
+% Minf = [Minf1,Minf2,Minf3,Minf4];
+% Cl0 = Cl(1);
+% for i = 1:length(Minf)
+    % beta(i) = sqrt(1-Minf(i)^2);
+    % Cl(i) = 1/beta(i) *Cl0;
+
+% end
+
 
 %% 4
 % attack_angle = 0;
