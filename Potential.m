@@ -2,6 +2,7 @@ clear;
 clc;
 close all;
 
+%% DATA INPUT
 % Specify the file path for the geometry coordinates text file
 e = 0;
 while e~=1
@@ -16,12 +17,19 @@ else
 end
 end
 
-clear e; clear panells; % Maintaining Workspace Clean
+clear e; clear panells; % Maintaining Workspace clean
 
 data = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
-file = fullfile(data);
+file = fullfile(data); % Subindex _m means Main Airfoil
 
-% Preallocating for speed
+% Read the geometry coordinates from the text file
+data = importdata(file);
+node(1,:) = data(:,2);
+node(2,:) = data(:,3);
+
+clear data; clear file; % Maintaining Workspace clean
+
+%% PREALLOCATING
 l_p = zeros(N,1);
 control = zeros(2,N);
 cosinus = zeros(1,N);
@@ -29,17 +37,19 @@ sinus = zeros(1,N);
 vec_n = zeros(2,N);
 vec_t = zeros(2,N);
 
-% Read the geometry coordinates from the text file
-data = importdata(file);
+%% PARAMETERS DEFINITION
+% Geometry
+c_a = 1;
 
-node(1,:) = data(:,2);
-node(2,:) = data(:,3);
+% Fluid
+Q_inf = 1; % in m/s
+AoA = 0; % in degrees
 
-clear data; clear file;
+%% GEOMETRY PREVIOUS CALCULATIONS
+% Scalate
+node(:,:) = node(:,:)*c_a;
 
-% Initial conditions
-Q_inf = 1;
-AoA = 0;
+%% AIRFOIL
 
 for i= 1:(length(node)-1)
         l_p(i,1) = sqrt((node(1,i+1)-node(1,i))^2+(node(2,i)-node(2,i+1))^2);
@@ -52,12 +62,13 @@ for i= 1:(length(node)-1)
         vec_t(1,i) = cosinus(1,i);
         vec_t(2,i) = -sinus(1,i);
 end
-
 clear i;
 
 [v_f,cp,a_ii,sigma] = Sources(Q_inf,cosinus,sinus,l_p,node,control,vec_n);
 
-% Plot the geometry of the cylinder with nodal and control points
+%% PLOTTING
+
+% Airfoil geometry
 figure;
 plot(node(1, [1:end, 1]), node(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
 hold on;
@@ -68,7 +79,7 @@ xlabel('X');
 ylabel('Y');
 legend('Nodal Points', 'Control Points');
 
-% Optionally, plot the geometry along with the middle points
+% Airfoil vectors
 figure;
 plot(node(1, [1:end, 1]), node(2, [1:end, 1]), 'bo-', 'LineWidth', 2);
 hold on;
@@ -79,16 +90,3 @@ xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
 quiver(control(1,:),control(2,:),vec_n(1,:),vec_n(2,:));
-
-% Integral of convective term, x and y components.
-%
-% Written by: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
-% Group 16. AMVO. MUEA.
-%
-% Inputs:
-%   u: Matrix of the horitzontal velocity components
-%   v: Matrix of the vertical velocity components
-%   L: length of a side of the analysed square
-% Outputs:
-%   u_conv_num: Solution of the convective terms of horitzontal velocity
-%   v_conv_num: Solution of the convective terms of vertical velocity

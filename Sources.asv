@@ -11,13 +11,11 @@ function [v_f,cp,a,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_
 %   sinus: Sinus of every panel
 %   l_p: Lenght of every panel
 %   node: Position of every node
-%   center: Position of the center point of a panel
-%   vec_n: Normal vector
+%   center: Position of center point of every panel
+%   vec_n: Normal vector of every panel
 % Outputs:
-%   v_f: Module of final velocity
-%   cp: Pressure coefficient
-%   sigma: Strenght
-%   a: DELETE
+%   v_f: velo
+%   cp: cp
 
 a = zeros(size(vec_n,2),size(vec_n,2));
 b = zeros(size(vec_n,2),1);
