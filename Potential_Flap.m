@@ -16,6 +16,8 @@ else
 end
 end
 
+clear e; clear panells; % Maintaining Workspace Clean
+
 data_airfoil = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
 file_airfoil = fullfile(data_airfoil);
 
