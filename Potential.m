@@ -41,10 +41,6 @@ vec_t = zeros(2,N);
 % Geometry
 c = 1;
 
-% Fluid
-%Q_inf = 1; % in m/s
-%AoA = 5; % in degrees
-
 %% GEOMETRY PREVIOUS CALCULATIONS
 % Scalate
 node(:,:) = node(:,:)*c;
@@ -67,18 +63,30 @@ clear i;
 %[v_f,cp,a_ii,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,control,vec_n);
 %% APARTAT 1
 Q_inf = 1; % in m/s
-AoA = [2 4 6 8 10]
-for i = 1:length(AoA)
-[V_f, Vx, Vz, Cp, Cl, Cm_0, gamma] = Vortex(Q_inf,AoA(i),cosinus,sinus,l_p,node,control, vec_t, c);
-V_f_1(i,:) = V_f;
-Vx_1(i,:) = Vx;
-Vz_1(i,:) = Vz;
-Cp_1(i,:) = Cp;
-Cl_1(i) = Cl;
-Cm_0_1(i) = Cm_0;
+AoA_1 = [2 4 6 8 10]; % in degrees
+
+% Preallocating
+v_f_1 = zeros(length(AoA_1),N);
+v_x_1 = zeros(length(AoA_1),N);
+v_z_1 = zeros(length(AoA_1),N);
+cp_1 = zeros(length(AoA_1),N);
+cl_1 = zeros(1,length(AoA_1));
+cm_0_1 = zeros(1,length(AoA_1));
+gamma_1 = zeros(length(AoA_1),N);
+
+for i = 1:length(AoA_1)
+[v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_1(i),cosinus,sinus,l_p,node,control,vec_t,c);
+v_f_1(i,:) = v_f;
+v_x_1(i,:) = v_x;
+v_z_1(i,:) = v_z;
+cp_1(i,:) = cp;
+cl_1(i) = cl;
+cm_0_1(i) = cm_0;
 gamma_1(i,:) = gamma;
 end
-%% PLOTTING
+clear i;
+
+%% PLOTTING GENERAL
 
 % Airfoil geometry
 figure;
@@ -102,3 +110,20 @@ xlabel('x');
 ylabel('z');
 legend('Node', 'Punt mig');
 quiver(control(1,:),control(2,:),vec_n(1,:),vec_n(2,:));
+
+%% PLOTTING PART 1
+% Cl vs AoA
+figure;
+plot(AoA_1,cl_1, '-', 'LineWidth', 2);
+title('Cl vs AoA for NACA 0010');
+xlabel('Angle of attack');
+ylabel('Cl');
+legend('Cl');
+
+% Cm vs AoA
+figure;
+plot(AoA_1,cm_0_1, '-', 'LineWidth', 2);
+title('Cm_1_/_4 vs AoA for NACA 0010');
+xlabel('Angle of attack');
+ylabel('Cm_1_/_4');
+legend('Cm_1_/_4');
