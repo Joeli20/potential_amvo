@@ -1,4 +1,4 @@
-function [v_f,cp,a,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_n)
+function [v_f,cp,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_n)
 % Sources strenght calculation
 %
 % Written by: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
@@ -17,7 +17,6 @@ function [v_f,cp,a,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_
 %   v_f: Module of final velocity
 %   cp: Pressure coefficient
 %   sigma: Sources strenght
-%   a: DELETE
 
 % Preallocating
 a = zeros(size(vec_n,2),size(vec_n,2));

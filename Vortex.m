@@ -1,4 +1,4 @@
-function [v_f,v_x,v_z,cp,cl,cl_nod,L,cm_0,cm_0_nod,a,gamma] = Vortex(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_t)
+function [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA,cosinus,sinus,l_p,node,center,vec_t,c)
 % Vortex strenght calculation
 %
 % Written by: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
@@ -13,6 +13,7 @@ function [v_f,v_x,v_z,cp,cl,cl_nod,L,cm_0,cm_0_nod,a,gamma] = Vortex(Q_inf,AoA,c
 %   node: Position of every node
 %   center: Position of the center point of a panel
 %   vec_t: Tangent vector
+%   c: Chord
 % Outputs:
 %   v_f: Module of final velocity
 %   v_x: X component of the Velocity 
@@ -21,10 +22,6 @@ function [v_f,v_x,v_z,cp,cl,cl_nod,L,cm_0,cm_0_nod,a,gamma] = Vortex(Q_inf,AoA,c
 %   cl: Lift coefficient
 %   cm_0: Free moment coefficient
 %   gamma: Vortex strenght
-%   cl_nod: DELETE
-%   L: DELETE
-%   cm_0_nod: DELETE
-%   a: DELETE
 
 % Preallocating
 a = zeros(size(vec_t,2),size(vec_t,2));
@@ -72,9 +69,9 @@ for i = 1:size(vec_t,2)
     v_z(i) = gamma(i)*vec_t(2,i);
     v_f(i) = abs(gamma(i));
     cp(i) = 1-(gamma(i)/Q_inf)^2;
-    cl_nod(i) = (2*gamma(i).*l_p(i,1))./(Q_inf*1);
+    cl_nod(i) = (2*gamma(i).*l_p(i,1))./(Q_inf*c);
     L_rara(i) = (gamma(i).*l_p(i,1));
-    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/1^2).*(((center(1,i)-1/4)*(node(1,i+1)-node(1,i)))+(center(2,i)*(node(2,i+1)-node(2,i))));
+    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/c^2).*(((center(1,i)-1/4)*(node(1,i+1)-node(1,i)))+(center(2,i)*(node(2,i+1)-node(2,i))));
 end
 L = sum(L_rara)*Q_inf;
 cl = sum(cl_nod);
