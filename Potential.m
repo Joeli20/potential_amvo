@@ -64,7 +64,7 @@ for i= 1:(length(node)-1)
 end
 clear i;
 
-[v_f,cp,a_ii,sigma] = Sources(Q_inf,cosinus,sinus,l_p,node,control,vec_n);
+[v_f,cp,a_ii,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,control,vec_n);
 
 %% PLOTTING
 
