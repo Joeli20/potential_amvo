@@ -58,7 +58,7 @@ c_m = 1;
 c_f = 0.45;
 gap = 0.05; % distance between trailing edge (airfoil) and leading edge (flap)
 delta_f = 45; % in degrees
-
+c = c_m+c_f+gap;
 % Fluid
 Q_inf = 1; % in m/s
 AoA = 0; % in degrees
@@ -106,6 +106,8 @@ for i= 1:(length(node_f)-1)
 end
 clear i;
 
+
+[vf,vx,vz,Cp,Cl,Cm_0,Gamma,a_i] = Vortex_flap(Q_inf,AoA,cosinus_m,cosinus_f,sinus_m,sinus_f,l_p_m,l_p_f,node_m,node_f,control_m,control_f,vec_t_m,vec_t_f,c);
 %% PLOTTING
 
 % Airfoil geometry
