@@ -115,9 +115,9 @@ for i = 1:length(AoA_2)
         cp_min(i) = min(cp_2(:,j,i));
 
         cp_star(j,i) = (2/(GAMMA*M_inf(j).^2))*(((2+(GAMMA-1)*M_inf(j).^2)/(1+GAMMA))^(GAMMA/(GAMMA-1))-1);
-        cp_Laitone(j,i) = cp_min/(sqrt(1-M_inf(j)^2)+(cp_min/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
+        cp_Laitone(j,i) = cp_min(i)/(sqrt(1-M_inf(j)^2)+(cp_min(i)/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
 
-        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.1
+        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.05
             M_inf_2(i) = M_inf(j);
             break;
         end
