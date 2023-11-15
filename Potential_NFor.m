@@ -59,19 +59,17 @@ v_f_1 = zeros(length(AoA_1),N);
 v_x_1 = zeros(length(AoA_1),N);
 v_z_1 = zeros(length(AoA_1),N);
 cp_1 = zeros(length(AoA_1),N);
-% cl_1 = zeros(length(AoA_1),6);
-% cm_0_1 = zeros(length(AoA_1),6);
 gamma_1 = zeros(length(AoA_1),N);
 
 for i = 1:length(AoA_1)
-[v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_1(i),cosinus,sinus,l_p,node,control,vec_t,c);
-v_f_1(i,:) = v_f;
-v_x_1(i,:) = v_x;
-v_z_1(i,:) = v_z;
-cp_1(i,:) = cp;
-cl_1(i,k) = cl;
-cm_0_1(i,k) = cm_0;
-gamma_1(i,:) = gamma;
+    [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_1(i),cosinus,sinus,l_p,node,control,vec_t,c);
+    v_f_1(i,:) = v_f;
+    v_x_1(i,:) = v_x;
+    v_z_1(i,:) = v_z;
+    cp_1(i,:) = cp;
+    cl_1(i,k) = cl;
+    cm_0_1(i,k) = cm_0;
+    gamma_1(i,:) = gamma;
 end
 clear i;
 
@@ -91,7 +89,6 @@ gamma_2 = zeros(N,length(M_inf),length(AoA_2));
 
 for i = 1:length(AoA_2)
     for j = 1:length(M_inf)
-        Q_inf = 343*M_inf(j);
         [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_2(i),cosinus,sinus,l_p,node,control,vec_t,c);
         v_f_2(:,j,i) = v_f;
         v_x_2(:,j,i) = v_x;
@@ -104,9 +101,9 @@ for i = 1:length(AoA_2)
         cp_min(i) = min(cp_2(:,j,i));
 
         cp_star(j,i) = (2/(GAMMA*M_inf(j).^2))*(((2+(GAMMA-1)*M_inf(j).^2)/(1+GAMMA))^(GAMMA/(GAMMA-1))-1);
-        cp_Laitone(j,i) = cp_min/(sqrt(1-M_inf(j)^2)+(cp_min/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
+        cp_Laitone(j,i) = cp_min(i)/(sqrt(1-M_inf(j)^2)+(cp_min(i)/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
 
-        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.04
+        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.1
             M_inf_2(i,k) = M_inf(j);
             break;
         end
@@ -114,6 +111,32 @@ for i = 1:length(AoA_2)
 end
 clear cp_min; clear cp_star; clear cp_Laitone; clear i;
 
+%% APARTAT 3
+% AoA_3 = 2;
+% M_inf_3 = [M_inf_2(2)-0.15 M_inf_2(2)-0.1 M_inf_2(2)-0.05 M_inf_2(2)];
+% 
+% % Preallocating
+% v_f_3 = zeros(length(M_inf_3),N);
+% v_x_3 = zeros(length(M_inf_3),N);
+% v_z_3 = zeros(length(M_inf_3),N);
+% cp_3 = zeros(length(M_inf_3),N);
+% cl_3_incompressible = zeros(1,length(M_inf_3));
+% cm_0_3 = zeros(1,length(M_inf_3));
+% gamma_3 = zeros(length(M_inf_3),N);
+% 
+% 
+% for i = 1:length(M_inf_3)
+%     Beta(i) = sqrt(1-M_inf_3(i)^2);
+%     [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
+%     v_f_3(i,:) = v_f;
+%     v_x_3(i,:) = v_x;
+%     v_z_3(i,:) = v_z;
+%     cp_3(i,:) = cp;
+%     cl_3_incompressible(i) = cl;
+%     cm_0_3(i) = cm_0;
+%     gamma_3(i,:) = gamma;
+%     cl_3(i) = cl_3_incompressible(i)./Beta(i);
+% end
 end
 
 %% PLOTTING GENERAL

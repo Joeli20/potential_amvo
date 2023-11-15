@@ -41,6 +41,9 @@ vec_t = zeros(2,N);
 % Geometry
 c = 1;
 
+% Fluid
+Q_inf = 1; % in m/s
+
 %% GEOMETRY PREVIOUS CALCULATIONS
 % Scalate
 node(:,:) = node(:,:)*c;
@@ -60,9 +63,7 @@ for i= 1:(length(node)-1)
 end
 clear i;
 
-%[v_f,cp,a_ii,sigma] = Sources(Q_inf,AoA,cosinus,sinus,l_p,node,control,vec_n);
 %% APARTAT 1
-Q_inf = 1; % in m/s
 AoA_1 = [2 4 6 8 10]; % in degrees
 
 % Preallocating
@@ -75,20 +76,20 @@ cm_0_1 = zeros(1,length(AoA_1));
 gamma_1 = zeros(length(AoA_1),N);
 
 for i = 1:length(AoA_1)
-[v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_1(i),cosinus,sinus,l_p,node,control,vec_t,c);
-v_f_1(i,:) = v_f;
-v_x_1(i,:) = v_x;
-v_z_1(i,:) = v_z;
-cp_1(i,:) = cp;
-cl_1(i) = cl;
-cm_0_1(i) = cm_0;
-gamma_1(i,:) = gamma;
+    [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_1(i),cosinus,sinus,l_p,node,control,vec_t,c);
+    v_f_1(i,:) = v_f;
+    v_x_1(i,:) = v_x;
+    v_z_1(i,:) = v_z;
+    cp_1(i,:) = cp;
+    cl_1(i) = cl;
+    cm_0_1(i) = cm_0;
+    gamma_1(i,:) = gamma;
 end
 clear i;
 
 %% APARTAT 2
 AoA_2 = [0 2 4 6];
-M_inf = linspace(0.1, 0.99, 100);
+M_inf = linspace(0.01, 0.99, 100);
 GAMMA = 1.4;
 
 % Preallocating
@@ -102,8 +103,6 @@ gamma_2 = zeros(N,length(M_inf),length(AoA_2));
 
 for i = 1:length(AoA_2)
     for j = 1:length(M_inf)
-        %Q_inf = 343*M_inf(j);
-        Q_inf = 1;
         [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_2(i),cosinus,sinus,l_p,node,control,vec_t,c);
         v_f_2(:,j,i) = v_f;
         v_x_2(:,j,i) = v_x;
@@ -138,11 +137,9 @@ cp_3 = zeros(length(M_inf_3),N);
 cl_3_incompressible = zeros(1,length(M_inf_3));
 cm_0_3 = zeros(1,length(M_inf_3));
 gamma_3 = zeros(length(M_inf_3),N);
-
+Beta = zeros(1,length(M_inf_3));
 
 for i = 1:length(M_inf_3)
-    %Q_inf=343*M_inf_3(i);
-    Q_inf = 1;
     Beta(i) = sqrt(1-M_inf_3(i)^2);
     [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
     v_f_3(i,:) = v_f;
@@ -154,6 +151,8 @@ for i = 1:length(M_inf_3)
     gamma_3(i,:) = gamma;
     cl_3(i) = cl_3_incompressible(i)./Beta(i);
 end
+clear i;
+
 %% PLOTTING GENERAL
 
 % Airfoil geometry
