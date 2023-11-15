@@ -112,31 +112,31 @@ end
 clear cp_min; clear cp_star; clear cp_Laitone; clear i;
 
 %% APARTAT 3
-% AoA_3 = 2;
-% M_inf_3 = [M_inf_2(2)-0.15 M_inf_2(2)-0.1 M_inf_2(2)-0.05 M_inf_2(2)];
-% 
-% % Preallocating
-% v_f_3 = zeros(length(M_inf_3),N);
-% v_x_3 = zeros(length(M_inf_3),N);
-% v_z_3 = zeros(length(M_inf_3),N);
-% cp_3 = zeros(length(M_inf_3),N);
-% cl_3_incompressible = zeros(1,length(M_inf_3));
-% cm_0_3 = zeros(1,length(M_inf_3));
-% gamma_3 = zeros(length(M_inf_3),N);
-% 
-% 
-% for i = 1:length(M_inf_3)
-%     Beta(i) = sqrt(1-M_inf_3(i)^2);
-%     [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
-%     v_f_3(i,:) = v_f;
-%     v_x_3(i,:) = v_x;
-%     v_z_3(i,:) = v_z;
-%     cp_3(i,:) = cp;
-%     cl_3_incompressible(i) = cl;
-%     cm_0_3(i) = cm_0;
-%     gamma_3(i,:) = gamma;
-%     cl_3(i) = cl_3_incompressible(i)./Beta(i);
-% end
+AoA_3 = 2;
+M_inf_3 = [M_inf_2(2)-0.15 M_inf_2(2)-0.1 M_inf_2(2)-0.05 M_inf_2(2)];
+
+% Preallocating
+v_f_3 = zeros(length(M_inf_3),N);
+v_x_3 = zeros(length(M_inf_3),N);
+v_z_3 = zeros(length(M_inf_3),N);
+cp_3 = zeros(length(M_inf_3),N);
+cl_3_incompressible = zeros(1,length(M_inf_3));
+cm_0_3 = zeros(1,length(M_inf_3));
+gamma_3 = zeros(length(M_inf_3),N);
+
+
+for i = 1:length(M_inf_3)
+    Beta(i) = sqrt(1-M_inf_3(i)^2);
+    [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
+    v_f_3(i,:) = v_f;
+    v_x_3(i,:) = v_x;
+    v_z_3(i,:) = v_z;
+    cp_3(i,:) = cp;
+    cl_3_incompressible(i) = cl;
+    cm_0_3(i) = cm_0;
+    gamma_3(i,:) = gamma;
+    cl_3(i,k) = cl_3_incompressible(i)./Beta(i);
+end
 end
 
 %% PLOTTING GENERAL

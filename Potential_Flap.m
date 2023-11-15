@@ -59,6 +59,7 @@ c_f = 0.45;
 gap = 0.05; % distance between trailing edge (airfoil) and leading edge (flap)
 delta_f = 45; % in degrees
 c = c_m+c_f+gap;
+
 % Fluid
 Q_inf = 1; % in m/s
 AoA = 0; % in degrees
