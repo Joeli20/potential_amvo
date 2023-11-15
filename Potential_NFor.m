@@ -106,15 +106,16 @@ for i = 1:length(AoA_2)
         cp_star(j,i) = (2/(GAMMA*M_inf(j).^2))*(((2+(GAMMA-1)*M_inf(j).^2)/(1+GAMMA))^(GAMMA/(GAMMA-1))-1);
         cp_Laitone(j,i) = cp_min/(sqrt(1-M_inf(j)^2)+(cp_min/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
 
-        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.1
+        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.04
             M_inf_2(i,k) = M_inf(j);
             break;
         end
     end
 end
-clearvars -except M_inf_2
+clear cp_min; clear cp_star; clear cp_Laitone; clear i;
 
 end
+
 %% PLOTTING GENERAL
 
 % Airfoil geometry
@@ -159,6 +160,7 @@ legend('Cm_1_/_4');
 
 %% PLOTTING PART 2
 % Cl vs AoA
+AoA_2 = [0 2 4 6];
 figure;
 plot(AoA_2,M_inf_2, '-', 'LineWidth', 2);
 title('M_c_r vs AoA for NACA 0010');
