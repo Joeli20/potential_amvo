@@ -103,7 +103,7 @@ for i = 1:length(M_inf_3)
     cl_3_incompressible(i) = cl;
     cm_0_3(i) = cm_0;
     gamma_3(i,:) = gamma;
-    cl_3(i) = cl_3_incompressible(i)/Beta(i);
+    cl_3(i) = cl_3_incompressible(i)./Beta(i);
 end
 
 %%

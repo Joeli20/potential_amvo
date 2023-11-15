@@ -88,7 +88,7 @@ clear i;
 
 %% APARTAT 2
 AoA_2 = [0 2 4 6];
-M_inf = linspace(0.01, 0.99, 100);
+M_inf = linspace(0.1, 0.99, 100);
 GAMMA = 1.4;
 
 % Preallocating
@@ -102,7 +102,8 @@ gamma_2 = zeros(N,length(M_inf),length(AoA_2));
 
 for i = 1:length(AoA_2)
     for j = 1:length(M_inf)
-        Q_inf = 343*M_inf(j);
+        %Q_inf = 343*M_inf(j);
+        Q_inf = 1;
         [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_2(i),cosinus,sinus,l_p,node,control,vec_t,c);
         v_f_2(:,j,i) = v_f;
         v_x_2(:,j,i) = v_x;
@@ -117,7 +118,7 @@ for i = 1:length(AoA_2)
         cp_star(j,i) = (2/(GAMMA*M_inf(j).^2))*(((2+(GAMMA-1)*M_inf(j).^2)/(1+GAMMA))^(GAMMA/(GAMMA-1))-1);
         cp_Laitone(j,i) = cp_min(i)/(sqrt(1-M_inf(j)^2)+(cp_min(i)/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
 
-        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.05
+        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.1
             M_inf_2(i) = M_inf(j);
             break;
         end
@@ -140,7 +141,8 @@ gamma_3 = zeros(length(M_inf_3),N);
 
 
 for i = 1:length(M_inf_3)
-    Q_inf=343*M_inf_3(i);
+    %Q_inf=343*M_inf_3(i);
+    Q_inf = 1;
     Beta(i) = sqrt(1-M_inf_3(i)^2);
     [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
     v_f_3(i,:) = v_f;
@@ -150,7 +152,7 @@ for i = 1:length(M_inf_3)
     cl_3_incompressible(i) = cl;
     cm_0_3(i) = cm_0;
     gamma_3(i,:) = gamma;
-    cl_3(i) = cl_3_incompressible(i)/Beta(i);
+    cl_3(i) = cl_3_incompressible(i)./Beta(i);
 end
 %% PLOTTING GENERAL
 
