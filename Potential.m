@@ -85,10 +85,11 @@ cm_0_1(i) = cm_0;
 gamma_1(i,:) = gamma;
 end
 clear i;
+
 %% APARTAT 2
 AoA_2 = [0 2 4 6];
 M_inf = linspace(0.01, 0.99, 100);
-GAMMA=1.4;
+GAMMA = 1.4;
 
 % Preallocating
 v_f_2 = zeros(N,length(M_inf),length(AoA_2));
@@ -111,21 +112,22 @@ for i = 1:length(AoA_2)
         cm_0_2(j,i) = cm_0;
         gamma_2(:,j,i) = gamma;
 
-        Cp_min(i) = min(cp_2(:,j,i));
+        cp_min(i) = min(cp_2(:,j,i));
 
-        Cp_star(j,i) = (2/(GAMMA*M_inf(j).^2))*(((2+(GAMMA-1)*M_inf(j).^2)/(1+GAMMA))^(GAMMA/(GAMMA-1))-1);
-        Cp_Laitone(j,i) = Cp_min/(sqrt(1-M_inf(j)^2)+(Cp_min/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
+        cp_star(j,i) = (2/(GAMMA*M_inf(j).^2))*(((2+(GAMMA-1)*M_inf(j).^2)/(1+GAMMA))^(GAMMA/(GAMMA-1))-1);
+        cp_Laitone(j,i) = cp_min/(sqrt(1-M_inf(j)^2)+(cp_min/2)*(M_inf(j)^2/sqrt(1-M_inf(j)^2))*(1+(GAMMA-1)*M_inf(j)^2/2));
 
-        if abs(Cp_Laitone(j,i)-Cp_star(j,i))<0.1;
-            a=1
-            M_inf_final(i) = M_inf(j);
+        if abs(cp_Laitone(j,i)-cp_star(j,i))<0.1
+            M_inf_2(i) = M_inf(j);
             break;
         end
     end
 end
+clear i;
+
 %% APARTAT 3
 AoA_3 = 2;
-M_inf_3 = [M_inf_final(2)-0.15 M_inf_final(2)-0.1 M_inf_final(2)-0.05 M_inf_final(2)];
+M_inf_3 = [M_inf_2(2)-0.15 M_inf_2(2)-0.1 M_inf_2(2)-0.05 M_inf_2(2)];
 
 % Preallocating
 v_f_3 = zeros(length(M_inf_3),N);
@@ -191,3 +193,12 @@ title('Cm_1_/_4 vs AoA for NACA 0010');
 xlabel('Angle of attack');
 ylabel('Cm_1_/_4');
 legend('Cm_1_/_4');
+
+%% PLOTTING PART 2
+% Cl vs AoA
+figure;
+plot(AoA_2,M_inf_2, '-', 'LineWidth', 2);
+title('M_c_r vs AoA for NACA 0010');
+xlabel('Angle of attack');
+ylabel('M_c_r');
+legend('M_c_r');

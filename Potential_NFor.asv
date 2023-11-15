@@ -112,7 +112,7 @@ for i = 1:length(AoA_2)
         end
     end
 end
-clearvars -except M_inf_2
+clearvars -except M_in
 
 end
 %% PLOTTING GENERAL

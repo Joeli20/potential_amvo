@@ -75,6 +75,8 @@ gamma_1(i,:) = gamma;
 end
 clear i;
 
+end
+
 %% APARTAT 2
 AoA_2 = [0 2 4 6];
 M_inf = linspace(0.01, 0.99, 100);
@@ -112,9 +114,8 @@ for i = 1:length(AoA_2)
         end
     end
 end
-clearvars -except M_inf_2
 
-end
+
 %% PLOTTING GENERAL
 
 % Airfoil geometry
