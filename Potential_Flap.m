@@ -21,6 +21,12 @@ clear e; clear panells; % Maintaining Workspace clean
 data_m = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
 file_m = fullfile(data_m); % Subindex _m means Main Airfoil
 
+M = N/2;
+
+if N==16
+    M = 16;
+end
+
 data_f = "Airfoil_data_files/NACA_0015_N_"+N+"_coord.txt";
 file_f = fullfile(data_f); % Subindex _f means Flap Airfoil
 
@@ -44,12 +50,12 @@ sinus_m = zeros(1,N);
 vec_n_m = zeros(2,N);
 vec_t_m = zeros(2,N);
 
-l_p_f = zeros(N,1);
-control_f = zeros(2,N);
-cosinus_f = zeros(1,N);
-sinus_f = zeros(1,N);
-vec_n_f = zeros(2,N);
-vec_t_f = zeros(2,N);
+l_p_f = zeros(M,1);
+control_f = zeros(2,M);
+cosinus_f = zeros(1,M);
+sinus_f = zeros(1,M);
+vec_n_f = zeros(2,M);
+vec_t_f = zeros(2,M);
 
 %% PARAMETERS DEFINITION
 % Geometry
