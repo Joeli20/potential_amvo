@@ -28,6 +28,8 @@ a = zeros(size(vec_tm,2)+size(vec_tf,2),size(vec_tm,2)+size(vec_tf,2));
 b = zeros(size(vec_tm,2)+size(vec_tf,2),1);
 cm_0_nod = zeros(size(vec_tm,2)+size(vec_tf,2),1);
 trigger1 = size(vec_tm,2)+size(vec_tf,2);
+trigger2 = size(vec_tm,2);
+trigger3 = size(vec_tf,2);
 V_inf(1,1) = Q_inf*cosd(AoA);
 V_inf(1,2) = Q_inf*sind(AoA);
 x_pan = zeros(size(vec_tm,2)+size(vec_tf,2),size(vec_tm,2)+size(vec_tf,2));
@@ -122,14 +124,14 @@ for i = size(vec_tm,2)+1:size(vec_tf,2)+size(vec_tm,2)
     end
 
 end
-    k=round(trigger1/8);
+    k=round(trigger2/4);
     a(k,:)=0;
     a(k,1)=1;
-    a(k,trigger1/2)=1;
+    a(k,trigger2)=1;
     b(k,1) = 0;
-    g=round((trigger1*5)/8);
+    g=round((trigger2+(trigger3/4)));
     a(g,:)=0;
-    a(g,trigger1/2+1)=1;
+    a(g,trigger2+1)=1;
     a(g,trigger1)=1;
     b(g,1) = 0;   
     %a(k,k)=-1/2;
@@ -138,15 +140,15 @@ end
     gamma = a\b;
     gamma(k,1) = (gamma(k-1,1)+gamma(k+1,1))/2;
     gamma(g,1) = (gamma(g-1,1)+gamma(g+1,1))/2;
-
-for i = 1:size(vec_tm,2)%+size(vec_tf,2)
+ 
+for i = 1:size(vec_tm,2)
     v_x(i) = gamma(i)*vec_tm(1,i);
     v_z(i) = gamma(i)*vec_tm(2,i);
     v_f(i) = abs(gamma(i));
     cp(i) = 1-(gamma(i)/Q_inf)^2;
     cl_nod(i) = (2*gamma(i).*l_p_m(i,1))./(Q_inf*c);
     L_rara(i) = (gamma(i).*l_p_m(i,1));
-    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/c^2).*(((center_m(1,i)-1/4)*(node_m(1,i+1)-node_m(1,i)))+(center_m(2,i)*(node_m(2,i+1)-node_m(2,i))));
+    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/c^2).*(((center_m(1,i)-c/4)*(node_m(1,i+1)-node_m(1,i)))+(center_m(2,i)*(node_m(2,i+1)-node_m(2,i))));
 end
 for i = size(vec_tm,2)+1:size(vec_tf,2)+size(vec_tm,2)
     v_x(i) = gamma(i)*vec_tf(1,i-size(vec_tm,2));
@@ -155,7 +157,7 @@ for i = size(vec_tm,2)+1:size(vec_tf,2)+size(vec_tm,2)
     cp(i) = 1-(gamma(i)/Q_inf)^2;
     cl_nod(i) = (2*gamma(i).*l_p_f(i-size(vec_tm,2),1))./(Q_inf*c);
     L_rara(i) = (gamma(i).*l_p_f(i-size(vec_tm,2),1));
-    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/c^2).*(((center_f(1,i-size(vec_tm,2))-1/4)*(node_f(1,i+1-size(vec_tm,2))-node_f(1,i-size(vec_tm,2))))+(center_f(2,i-size(vec_tm,2))*(node_f(2,i+1-size(vec_tm,2))-node_f(2,i-size(vec_tm,2)))));
+    cm_0_nod(i) = cm_0_nod(i)+(cp(i)/c^2).*(((center_f(1,i-size(vec_tm,2))-c/4)*(node_f(1,i+1-size(vec_tm,2))-node_f(1,i-size(vec_tm,2))))+(center_f(2,i-size(vec_tm,2))*(node_f(2,i+1-size(vec_tm,2))-node_f(2,i-size(vec_tm,2)))));
 end
 L = sum(L_rara)*Q_inf;
 cl = sum(cl_nod);

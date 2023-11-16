@@ -2,13 +2,13 @@
 clear; clc; close all;
 
 % Define cylinder parameters
-cylinder_radius = 0.5;
+cylinder_radius = 1;
 cylinder_center = [0, 0];
 N = 199; % Number of panels
 
 Qinf=2;
 AoA=6;
-c=1;
+c=2;
 
 % Create parametric values for the cylinder
 theta = linspace(0, 2 * pi, N + 1); % Angles
