@@ -141,15 +141,18 @@ Beta = zeros(1,length(M_inf_3));
 
 for i = 1:length(M_inf_3)
     Beta(i) = sqrt(1-M_inf_3(i)^2);
-    [v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
+    [v_f,v_x,v_z,cp, Cp_LAITONE,cl, CL, cm_0,gamma] = Vortex2(M_inf_3(i),AoA_3,cosinus,sinus,l_p,node,control,vec_t,vec_n,c);
     v_f_3(i,:) = v_f;
     v_x_3(i,:) = v_x;
     v_z_3(i,:) = v_z;
     cp_3(i,:) = cp;
+    cp_LAITONE_3(i,:) = Cp_LAITONE;
+    %cp_Laitone(i) = cp_min(2)/(sqrt(1-M_inf_3(j)^2)+(cp_min(2)/2)*(M_inf_3(j)^2/sqrt(1-M_inf_3(j)^2))*(1+(GAMMA-1)*M_inf_3(j)^2/2));
     cl_3_incompressible(i) = cl;
     cm_0_3(i) = cm_0;
     gamma_3(i,:) = gamma;
     cl_3(i) = cl_3_incompressible(i)./Beta(i);
+    CL_3(i) = CL;
 end
 clear i;
 

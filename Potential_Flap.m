@@ -62,7 +62,7 @@ vec_t_f = zeros(2,M);
 c_m = 1;
 c_f = 0.45;
 gap = 0.05; % distance between trailing edge (airfoil) and leading edge (flap)
-delta_f = 4; % in degrees
+delta_f = 20; % in degrees
 c = c_m+c_f+gap;
 
 % Fluid
