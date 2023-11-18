@@ -141,6 +141,7 @@ Beta = zeros(1,length(M_inf_3));
 
 for i = 1:length(M_inf_3)
     Beta(i) = sqrt(1-M_inf_3(i)^2);
+    %[v_f,v_x,v_z,cp,cl,cm_0,gamma] = Vortex(Q_inf,AoA_3,cosinus,sinus,l_p,node,control,vec_t,c);
     [v_f,v_x,v_z,cp, Cp_LAITONE,cl, CL, cm_0,gamma] = Vortex2(M_inf_3(i),AoA_3,cosinus,sinus,l_p,node,control,vec_t,vec_n,c);
     v_f_3(i,:) = v_f;
     v_x_3(i,:) = v_x;
