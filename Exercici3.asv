@@ -1,0 +1,10 @@
+b = 4.5;
+c_r = 0.9;
+c_t = 0.6;
+m = 40;
+
+
+dy = linspace(0,4.5,9);
+for i=1:size(dy,1)
+    X_c(i) = (dy(i+1)-nodes(i))/2 + nodes(i);
+end
