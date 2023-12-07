@@ -1,27 +1,15 @@
-function V = vortex_line(x,z,x_c,z_c,gamma,N)
-R1_x = zeros(N-1,N-1);
-R1_z = zeros(N-1,N-1);
-R1_x = zeros(N-1,N-1);
-R2_z = zeros(N-1,N-1);
+function V_ab = vortex_line(x,y,z,x_c,y_c,z_c,gamma,N)
+V_ab = zeros(N-1,N-1,3);
     for i = 1:size(x_c,1)
         for j = 1:size(x_c,1)
-            if i == j
-                V(i,j,:) = 0;
+            R1 = [x_c(i)-x(j)   y_c(i)-y(j) z_c(i)-z(j)];
+            R2 = [x_c(i)-x(j+1)   y_c(i)-y(j+1) z_c(i)-z(j+1)];
+            R1_n = norm(R1);
+            R2_n = norm(R2);
+            if (norm(cross(R1,R2)) < 0.00001)
+                V_ab(i,j,:) = [0 0 0];
             else
-            R1_x(i,j) = x_c(i,1)-x(1,j);
-            R1_z(i,j) = z_c(i,1)-z(1,j);
-            R1(1,1) = R1_x(i,j);
-            R1(1,3) = R1_z(i,j);
-            R1(1,2) = 0;
-            R2_x(i,j) = x_c(i,1)-x(1,j+1);
-            R2_z(i,j) = z_c(i,1)-z(1,j+1);
-            R2(1,1) = R2_x(i,j);
-            R2(1,3) = R2_z(i,j);
-            R2(1,2) = 0;
-            R1_m(i,j) = sqrt((R1_x(i,j))^2+(R1_z(i,j))^2);
-            R2_m(i,j) = sqrt((R2_x(i,j))^2+(R2_z(i,j))^2);
-            L = cross(R1(1,:),R2(1,:))
-            V(i,j,:) = (gamma(i)/(4*pi))*((R1_m(i,j)+R2_m(i,j))/R1_m(i,j))*R2_m(i,j)*(R1_m(i,j)*R2_m(i,j)+(R1_x(i,j)*R2_x(i,j)+R1_z(i,j)*R2_z(x,j)))*cross(R1,R2);
+                V_ab(i,j,:) = 1/(4*pi)*(R1_n+R2_n)/(R1_n*R2_n*(R1_n*R2_n+dot(R1,R2)))*cross(R1,R2); 
             end
         end
    end
