@@ -27,7 +27,7 @@ if N==16
     M = 16;
 end
 
-data_f = "Airfoil_data_files/NACA_0010_N_"+N+"_coord.txt";
+data_f = "Airfoil_data_files/NACA_0015_N_"+N+"_coord.txt";
 file_f = fullfile(data_f); % Subindex _f means Flap Airfoil
 
 % Read the geometry coordinates from the text file
