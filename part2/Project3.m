@@ -166,6 +166,18 @@ for i=1:length(theta)
     e_w(i,1) = coef.Effi_ala;
     Cl_c(:,i) = coef.Cl_c_wing;
     Cl_c_tail(:,i) = coef.Cl_c_tail;
+    Cd_c_v(:,i) = coef.Cd_v_wing;
+    Cd_c_i(:,i) = coef.Cd_i_wing;
+    Cd_c_v_tail(:,i) = coef.Cd_v_tail;
+    Cd_c_i_tail(:,i) = coef.Cd_i_tail;
+    Alpha_c_i(:,i) = coef.alpha_i_wing;
+    Alpha_c_i_tail(:,i) = coef.alpha_i_tail;
+    CL(:,i) = coef.CL_wing;
+    CL_tail(:,i) = coef.CL_tail;
+    CD(:,i) = coef.CD_wing;
+    CD_tail(:,i) = coef.CD_tail;
+    CM(:,i) = coef.Cm_0_ala;
+    CM_tail(:,i) = coef.Cm_0_tail;
 
     if e_w(i,1)>Trigger
         Trigger = e_w(i,1);
@@ -174,8 +186,15 @@ for i=1:length(theta)
         THETA_T_d = rad2deg(THETA_T);
         Cl_c_bo = Cl_c;
         L = L_total(i,1);
+        k = i;
     end
 end
+
+plot(y_c/(b/2),Cl_c(:,k),y_c_h/(b/2),Cl_c_tail(:,k))
+grid on
+plot(y_c/(b/2),Cd_c_v(:,k),y_c_h/(b/2),Cd_c_v_tail(:,k));
+plot(y_c/(b/2),Cd_c_i(:,k),y_c_h/(b/2),Cd_c_i_tail(:,k));
+plot(y_c/(b/2),Alpha_c_i(:,k),y_c_h/(b/2),Alpha_c_i_tail(:,k));
 
 %% Part 2
 
