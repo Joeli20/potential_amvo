@@ -93,7 +93,7 @@ m_chord_h = (2/3)*c_r_h*((1+lambda_h+lambda_h^2)/(1+lambda_h));
 %% PART 1
 
 % Preallocating
-theta = linspace(-5,5,11);
+theta = linspace(-5,5,40);
 twist = theta;
 theta_t = zeros(length(theta),1);
 theta_dis = zeros(N_w,1);
@@ -191,7 +191,7 @@ for i=1:length(theta)
     end
 end
 
-plot(y_c/(b/2),Cl_c(:,k),y_c_h/(b/2),Cl_c_tail(:,k))
+plot(y_c/(b/2),Cl_c(:,k),y_c_h/(b/2),Cl_c_tail(:,k));
 grid on
 plot(y_c/(b/2),Cd_c_v(:,k),y_c_h/(b/2),Cd_c_v_tail(:,k));
 plot(y_c/(b/2),Cd_c_i(:,k),y_c_h/(b/2),Cd_c_i_tail(:,k));
@@ -304,12 +304,20 @@ theta = zeros(N_w,1);
 
 Cl_c_3 = coef_3.Cl_c_wing;
 Cl_c_tail_3 = coef_3.Cl_c_tail;
+CL_3 = coef_3.CL_wing;
+CL_tail_3 = coef_3.CL_tail;
 CM_3 = coef_3.Cm_0_ala;
 CM_tail_3 = coef_3.Cm_0_tail;
-CL_3 = coef_3.CL_wing;
-CL_Tail_3 = coef_3.CL_tail;
 CM_Roll_ala = coef_3.Cm_roll_ala;
-CM_roll_tail = coef_3.Cm_roll_tail;
+CM_Roll_tail = coef_3.Cm_roll_tail;
+
+L_3 = CL_3*(0.5*rho*(norm(Q_inf))^2*S_w);
+L_tail_3 = CL_tail_3*(0.5*rho*(norm(Q_inf))^2*S_h);
+M_Roll_ala = CM_Roll_ala*(0.5*rho*(norm(Q_inf))^2*S_w*b_a);
+M_Roll_tail = CM_Roll_tail*(0.5*rho*(norm(Q_inf))^2*S_h*b_h);
+
+CL_total3 = (L_3+L_tail_3)/(0.5*rho*(norm(Q_inf))^2*(S_w+S_h));
+CM_Roll_total = (M_Roll_ala+M_Roll_tail)/((0.5*rho*(norm(Q_inf))^2*S_w*b_a));
 
 %% CODE END
 %% TEST
