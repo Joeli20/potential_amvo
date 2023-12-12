@@ -198,99 +198,97 @@ plot(y_c/(b/2),Alpha_c_i(:,k),y_c_h/(b/2),Alpha_c_i_tail(:,k));
 
 %% Part 2
 
-    % Aerodynamic parameters
-    Cd_0 = 0.0075;
-    Cd_Cl = 0.0055;
-    delta_l = 0;
-    delta_r = 0;
-    delta_t = deg2rad(15);
-    AoA_d = 4;
-    AoA_d_t = 4+i_h;
-    AoA = AoA_d*(pi/180);
-    AoA_t = AoA_d_t*(pi/180);
-    Q_inf(1,1) = 1*cos(AoA);
-    Q_inf(1,2) = 0;
-    Q_inf(1,3) = 1*sin(AoA);
-    Q_inf_h(1,1) = 1*cos(AoA_t);
-    Q_inf_h(1,2) = 0;
-    Q_inf_h(1,3) = 1*sin(AoA_t);
-    theta = zeros(N_w,1);
+% Aerodynamic parameters
+Cd_0 = 0.0075;
+Cd_Cl = 0.0055;
+delta_l = 0;
+delta_r = 0;
+delta_t = deg2rad(15);
+AoA_d = 4;
+AoA_d_t = 4+i_h;
+AoA = AoA_d*(pi/180);
+AoA_t = AoA_d_t*(pi/180);
+Q_inf(1,1) = 1*cos(AoA);
+Q_inf(1,2) = 0;
+Q_inf(1,3) = 1*sin(AoA);
+Q_inf_h(1,1) = 1*cos(AoA_t);
+Q_inf_h(1,2) = 0;
+Q_inf_h(1,3) = 1*sin(AoA_t);
 
+% INTERACTIONS
+% Wing-Wing
+[V_inf_1_1, V_inf_2_1] = inf_vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w,AoA);
+[V_AB_1] = vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w);
+% Wing-Tail
+[V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
+[V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
+% Tail-Wing
+[V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
+[V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
+% Tail-Tail
+[V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
+[V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
-    % INTERACTIONS
-    % Wing-Wing
-    [V_inf_1_1, V_inf_2_1] = inf_vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w,AoA);
-    [V_AB_1] = vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w);
-    % Wing-Tail
-    [V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
-    [V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
-    % Tail-Wing
-    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
-    [V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
-    % Tail-Tail
-    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
-    [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
+% Gamma calculation
+[gamma_2, V_ij_2] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
+    V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_w,N_h,N_a,AoA,AoA_t,Q_inf,Cl_0, ...
+    Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
 
-    % Gamma calculation
-    [gamma_2, V_ij_2] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
-        V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_w,N_h,N_a,AoA,AoA_t,Q_inf,Cl_0, ...
-        Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
-    
-    % Coefficients calculation
-    [coef_2] = coefficients(rho,y,y_h,x_c,y_c, ...
-        z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_2,b,b_h, S_w, S_h, ...
-        theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+% Coefficients calculation
+[coef_2] = coefficients(rho,y,y_h,x_c,y_c, ...
+    z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_2,b,b_h, S_w, S_h, ...
+    theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
 
-    Cl_c_2(:,i) = coef_2.Cl_c_wing;
-    Cl_c_tail_2(:,i) = coef_2.Cl_c_tail;
+Cl_c_2(:,i) = coef_2.Cl_c_wing;
+Cl_c_tail_2(:,i) = coef_2.Cl_c_tail;
 
 %% Part 3
 
-    % Aerodynamic parameters
-    Cd_0 = 0.0075;
-    Cd_Cl = 0.0055;
-    delta_l = deg2rad(-10);
-    delta_r = deg2rad(10);
-    delta_t = deg2rad(0);
-    AoA_d = 4;
-    AoA_d_t = 4+i_h;
-    AoA = AoA_d*(pi/180);
-    AoA_t = AoA_d_t*(pi/180);
-    Q_inf(1,1) = 1*cos(AoA);
-    Q_inf(1,2) = 0;
-    Q_inf(1,3) = 1*sin(AoA);
-    Q_inf_h(1,1) = 1*cos(AoA_t);
-    Q_inf_h(1,2) = 0;
-    Q_inf_h(1,3) = 1*sin(AoA_t);
-    theta = zeros(N_w,1);
+% Aerodynamic parameters
+Cd_0 = 0.0075;
+Cd_Cl = 0.0055;
+delta_l = deg2rad(-10);
+delta_r = deg2rad(10);
+delta_t = deg2rad(0);
+AoA_d = 4;
+AoA_d_t = 4+i_h;
+AoA = AoA_d*(pi/180);
+AoA_t = AoA_d_t*(pi/180);
+Q_inf(1,1) = 1*cos(AoA);
+Q_inf(1,2) = 0;
+Q_inf(1,3) = 1*sin(AoA);
+Q_inf_h(1,1) = 1*cos(AoA_t);
+Q_inf_h(1,2) = 0;
+Q_inf_h(1,3) = 1*sin(AoA_t);
+theta = zeros(N_w,1);
 
 
-    % INTERACTIONS
-    % Wing-Wing
-    [V_inf_1_1, V_inf_2_1] = inf_vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w,AoA);
-    [V_AB_1] = vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w);
-    % Wing-Tail
-    [V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
-    [V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
-    % Tail-Wing
-    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
-    [V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
-    % Tail-Tail
-    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
-    [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
+% INTERACTIONS
+% Wing-Wing
+[V_inf_1_1, V_inf_2_1] = inf_vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w,AoA);
+[V_AB_1] = vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w);
+% Wing-Tail
+[V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
+[V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
+% Tail-Wing
+[V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
+[V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
+% Tail-Tail
+[V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
+[V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
-    % Gamma calculation
-    [gamma_3, V_ij_3] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
-        V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_w,N_h,N_a,AoA,AoA_t,Q_inf,Cl_0, ...
-        Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
-    
-    % Coefficients calculation
-    [coef_3] = coefficients(rho,y,y_h,x_c,y_c, ...
-        z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_3,b,b_h, S_w, S_h, ...
-        theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+% Gamma calculation
+[gamma_3, V_ij_3] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
+    V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_w,N_h,N_a,AoA,AoA_t,Q_inf,Cl_0, ...
+    Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
 
-    Cl_c_3(:,i) = coef_3.Cl_c_wing;
-    Cl_c_tail_3(:,i) = coef_3.Cl_c_tail;
+% Coefficients calculation
+[coef_3] = coefficients(rho,y,y_h,x_c,y_c, ...
+    z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_3,b,b_h, S_w, S_h, ...
+    theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+
+Cl_c_3(:,i) = coef_3.Cl_c_wing;
+Cl_c_tail_3(:,i) = coef_3.Cl_c_tail;
 
 %% CODE END
 %% TEST

@@ -1,7 +1,9 @@
 function [coef] = coefficients(rho,y,y_h,x_c,y_c,z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_1,N_2,Cl_0,Cl_alpha,gamma, b_wing,b_tail, S_wing, S_tail,theta,Cd_v0,Cd_v_Cl,M_chord_ala,M_chord_tail, Cm_025)
-%Ratio_wing
-% Cm_0_wing, Cm_0_tail, CM_roll_wing, CM_roll_tail
-
+% Calcul dels diferents parametres aerodinamics.
+%
+% Escrit per: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
+% Group 16. AMVO. MUEA.
+%
 for i = 1:N_1
     L(i,1) = rho*norm(Q_inf)*gamma(i,1)*(y(1,i+1)-y(1,i));
     CL(i,1) = (2/(norm(Q_inf)*S_wing))*gamma(i,1)*(y(1,i+1)-y(1,i));
