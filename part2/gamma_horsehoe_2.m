@@ -9,39 +9,47 @@ a = zeros(N_1+N_2,N_1+N_2);
 b = zeros(N_1+N_2,1);
 for i = 1:N_1
     for j = 1:N_1
-            V_ij(i,j,:) = V_AB_1(i,j,:)+Vinf1_1(i,j,:)-Vinf2_1(i,j,:);
+            
         if i == j
+            V_ij(i,j,:) = Vinf1_1(i,j,:)-Vinf2_1(i,j,:);
             a(i,j) = -0.5*Cl_alpha*c(i,1)*V_ij(i,j,3)+1;
         else
+            V_ij(i,j,:) = V_AB_1(i,j,:)+Vinf1_1(i,j,:)-Vinf2_1(i,j,:);
             a(i,j) = -0.5*Cl_alpha*c(i,1)*V_ij(i,j,3);
         end
     end
     for j = (N_1+1):(N_1+N_2)
-        V_ij(i,j,:) = V_AB_2(i,j-N_1,:)+Vinf1_2(i,j-N_1,:)-Vinf2_2(i,j-N_1,:);
+        
         if i == j
+            V_ij(i,j,:) = Vinf1_2(i,j-N_1,:)-Vinf2_2(i,j-N_1,:);
             a(i,j) = -0.5*Cl_alpha*c(i,1)*V_ij(i,j,3)+1;
         else
+            V_ij(i,j,:) = V_AB_2(i,j-N_1,:)+Vinf1_2(i,j-N_1,:)-Vinf2_2(i,j-N_1,:);
             a(i,j) = -0.5*Cl_alpha*c(i,1)*V_ij(i,j,3);
         end
     end
 end
 for i = (N_1+1):(N_1+N_2)
     for j = 1:N_1
-        V_ij(i,j,:) = V_AB_3(i-N_1,j,:)+Vinf1_3(i-N_1,j,:)-Vinf2_3(i-N_1,j,:);
         if i == j
+            V_ij(i,j,:) = Vinf1_3(i-N_1,j,:)-Vinf2_3(i-N_1,j,:);
             a(i,j) = -0.5*Cl_alpha*c_h(i-N_1,1)*V_ij(i,j,3)+1;
         else
+            V_ij(i,j,:) = V_AB_3(i-N_1,j,:)+Vinf1_3(i-N_1,j,:)-Vinf2_3(i-N_1,j,:);
             a(i,j) = -0.5*Cl_alpha*c_h(i-N_1,1)*V_ij(i,j,3);
         end
     end
     for j = (N_1+1):(N_1+N_2)
-        V_ij(i,j,:) = V_AB_4(i-N_1,j-N_1,:)+Vinf1_4(i-N_1,j-N_1,:)-Vinf2_4(i-N_1,j-N_1,:);
+        
         if i == j
+            V_ij(i,j,:) = Vinf1_4(i-N_1,j-N_1,:)-Vinf2_4(i-N_1,j-N_1,:);
             a(i,j) = -0.5*Cl_alpha*c_h(i-N_1,1)*V_ij(i,j,3)+1;
         else
+            V_ij(i,j,:) = V_AB_4(i-N_1,j-N_1,:)+Vinf1_4(i-N_1,j-N_1,:)-Vinf2_4(i-N_1,j-N_1,:);
             a(i,j) = -0.5*Cl_alpha*c_h(i-N_1,1)*V_ij(i,j,3);
         end
     end
+end
 for i = 1:N_3
     b(i,1) = 0.5*c(i,1)*norm(Q_inf)*(Cl_0+Cl_alpha*(AoA+theta(i,1))+Cl_delta*delta_l);
 end
@@ -51,8 +59,8 @@ end
 for i = N_1-N_3+1:N_1
     b(i,1) = 0.5*c(i,1)*norm(Q_inf)*(Cl_0+Cl_alpha*(AoA+theta(i,1))+Cl_delta*delta_r);
 end
-for i = N_1+1:N_1+N_2
-    b(i,1) = 0.5*c_h(i-N_1,1)*norm(Q_inf)*(Cl_0+Cl_alpha*(AoA_t)+Cl_delta*delta_t);
+for j = N_1+1:N_1+N_2
+    b(j,1) = 0.5*c_h(j-N_1,1)*norm(Q_inf)*(Cl_0+Cl_alpha*(AoA_t)+Cl_delta*delta_t);
 end
 gamma = a\b;
 end
