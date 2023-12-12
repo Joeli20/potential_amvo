@@ -92,7 +92,7 @@ m_chord_h = (2/3)*c_r_h*((1+lambda_h+lambda_h^2)/(1+lambda_h));
 %% PART 1
 
 % Preallocating
-theta = linspace(-6,6,12);
+theta = linspace(-5,5,10);
 theta_t = zeros(length(theta),1);
 theta_dis = zeros(N_w,1);
 L_total = zeros(length(theta),1);
@@ -145,10 +145,10 @@ for i=1:length(theta)
     [V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
     [V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
     % Tail-Wing
-    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
+    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA_t);
     [V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
     % Tail-Tail
-    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
+    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA_t);
     [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
     % Gamma calculation
