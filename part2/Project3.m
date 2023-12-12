@@ -93,6 +93,7 @@ m_chord_h = (2/3)*c_r_h*((1+lambda_h+lambda_h^2)/(1+lambda_h));
 
 % Preallocating
 theta = linspace(-5,5,10);
+twist = theta;
 theta_t = zeros(length(theta),1);
 theta_dis = zeros(N_w,1);
 L_total = zeros(length(theta),1);
@@ -221,6 +222,9 @@ end
         z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_2,b,b_h, S_w, S_h, ...
         theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
 
+    Cl_c_2(:,i) = coef_2.Cl_c_wing;
+    Cl_c_tail_2(:,i) = coef_2.Cl_c_tail;
+
 %% Part 3
 
     % Aerodynamic parameters
@@ -265,6 +269,9 @@ end
     [coef_3] = coefficients(rho,y,y_h,x_c,y_c, ...
         z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_3,b,b_h, S_w, S_h, ...
         theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+
+    Cl_c_3(:,i) = coef_3.Cl_c_wing;
+    Cl_c_tail_3(:,i) = coef_3.Cl_c_tail;
 
 %% CODE END
 %% TEST
