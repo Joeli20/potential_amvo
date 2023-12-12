@@ -1,9 +1,9 @@
 function [V_inf1,V_inf2] = inf_vortex_line(x,y,z,x_c,y_c,z_c,N_1,N_2,AoA)
-%R1 = zeros(N-1,N-1,3);
-%R2 = zeros(N-1,N-1,3);
-%ur = zeros(N-1,N-1,3);
-%ur_2 = zeros(N-1,N-1,3);
-%ur_1 = zeros(N-1,N-1,3);
+% Calcula la influencia entre nodes d'una recta de vortex infinita
+%
+% Escrit per: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
+% Group 16. AMVO. MUEA.
+%
 V_inf1 = zeros(N_1,N_2,3);
 V_inf2 = zeros(N_1,N_2,3);
     for i = 1:N_1

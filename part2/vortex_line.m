@@ -1,4 +1,9 @@
 function V_ab = vortex_line(x,y,z,x_c,y_c,z_c,N_1,N_2)
+% Calcula la influencia entre nodes d'una recta de vortex finita
+%
+% Escrit per: Joel Campo, Jordi Gallart, Martí Santamaria, 2023
+% Group 16. AMVO. MUEA.
+%
 V_ab = zeros(N_1,N_2,3);
     for i = 1:N_1
         for j = 1:N_2
