@@ -254,7 +254,7 @@ L_tail_2(i) = CL_tail_2(i)*(0.5*rho*(norm(Q_inf))^2*S_h);
 M_2(i) = CM_2(:,i)*(0.5*rho*(norm(Q_inf))^2*S_w*m_chord_w);
 M_tail_2(i) = CM_tail_2(:,i)*(0.5*rho*(norm(Q_inf))^2*S_h*m_chord_h);
 
-CL_total2(i) = (L_2(i)+L_tail_2(i))*(0.5*rho*(norm(Q_inf))^2*S_w);
+CL_total2(i) = (L_2(i)+L_tail_2(i))/(0.5*rho*(norm(Q_inf))^2*(S_w+S_h));
 Cm_total2(i) = (M_2(i)+M_tail_2(i))/(0.5*rho*(norm(Q_inf))^2*S_w*m_chord_w);
 end
 %% Part 3
