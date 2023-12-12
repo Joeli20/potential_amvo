@@ -24,11 +24,12 @@ Cm_025 = 0; % NACA 0010
 Cl_0 = 0; % NACA 0010
 Cl_alpha = 6.7265; % NACA 0010
 Cl_delta = 4.1554; % NACA 0015
+Cm_delta = -0.6704; %NACA 0015
 
 N = 256; % Sections INPUT
 N_w = N; % Wing sections
 N_h = N/2; % Tail sections
-N_a = round((N_w/2)*3/2); % Number of ailerons
+N_a = round((N_w/2)*2/3); % Number of ailerons
 
 % Other fluid parameters
 rho = 1.225;
@@ -40,7 +41,7 @@ y = linspace(-b/2,b/2,N_w+1);
 z = linspace(0,0,N_w+1);
 x_h = linspace(3,3,N_h+1);
 y_h = linspace(-b_h/2,b_h/2,N_h+1);
-z_h = linspace(-0.005,-0.005,N_h+1);
+z_h = linspace(-0.000005,-0.000005,N_h+1);
 x_c = zeros(N_w,1);
 y_c = zeros(N_w,1);
 z_c = zeros(N_w,1);
@@ -160,7 +161,7 @@ for i=1:length(theta)
     % Coefficients calculation
     [coef] = coefficients(rho,y,y_h,x_c,y_c, ...
         z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma(:,i),b,b_h, S_w, S_h, ...
-        theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+        theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h,Cm_delta,Cm_025,delta_l,delta_r,delta_t);
 
     L_total(i,1) = coef.L_total;
     e_w(i,1) = coef.Effi_ala;
@@ -170,8 +171,8 @@ for i=1:length(theta)
     Cd_c_i(:,i) = coef.Cd_i_wing;
     Cd_c_v_tail(:,i) = coef.Cd_v_tail;
     Cd_c_i_tail(:,i) = coef.Cd_i_tail;
-    Alpha_c_i(:,i) = coef.alpha_i_wing;
-    Alpha_c_i_tail(:,i) = coef.alpha_i_tail;
+    Alpha_c_i(:,i) = rad2deg(coef.alpha_i_wing);
+    Alpha_c_i_tail(:,i) = rad2deg(coef.alpha_i_tail);
     CL(:,i) = coef.CL_wing;
     CL_tail(:,i) = coef.CL_tail;
     CD(:,i) = coef.CD_wing;
@@ -203,7 +204,8 @@ Cd_0 = 0.0075;
 Cd_Cl = 0.0055;
 delta_l = 0;
 delta_r = 0;
-delta_t = deg2rad(15);
+delta_t = [-15,15];
+delta_t = deg2rad(delta_t);
 AoA_d = 4;
 AoA_d_t = 4+i_h;
 AoA = AoA_d*(pi/180);
@@ -214,7 +216,9 @@ Q_inf(1,3) = 1*sin(AoA);
 Q_inf_h(1,1) = 1*cos(AoA_t);
 Q_inf_h(1,2) = 0;
 Q_inf_h(1,3) = 1*sin(AoA_t);
-
+theta = zeros(N_w,1);
+for i = 1:length(delta_t)
+    delta_t2 = delta_t(i);
 % INTERACTIONS
 % Wing-Wing
 [V_inf_1_1, V_inf_2_1] = inf_vortex_line(x,y,z,x_c,y_c,z_c,N_w,N_w,AoA);
@@ -230,18 +234,20 @@ Q_inf_h(1,3) = 1*sin(AoA_t);
 [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
 % Gamma calculation
-[gamma_2, V_ij_2] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
+[gamma_2(:,i), V_ij_2] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
     V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_w,N_h,N_a,AoA,AoA_t,Q_inf,Cl_0, ...
-    Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
+    Cl_alpha, Cl_delta,theta,delta_l,delta_r,delta_t2);
 
 % Coefficients calculation
 [coef_2] = coefficients(rho,y,y_h,x_c,y_c, ...
-    z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_2,b,b_h, S_w, S_h, ...
-    theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+    z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_2(:,i),b,b_h, S_w, S_h, ...
+    theta,Cd_0,Cd_Cl,m_chord_w,m_chord_h,Cm_delta,Cm_025,delta_l,delta_r,delta_t2);
 
 Cl_c_2(:,i) = coef_2.Cl_c_wing;
 Cl_c_tail_2(:,i) = coef_2.Cl_c_tail;
-
+CM_2(:,i) = coef_2.Cm_0_ala;
+CM_tail_2(:,i) = coef_2.Cm_0_tail;
+end
 %% Part 3
 
 % Aerodynamic parameters
@@ -280,15 +286,21 @@ theta = zeros(N_w,1);
 % Gamma calculation
 [gamma_3, V_ij_3] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3, ...
     V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_w,N_h,N_a,AoA,AoA_t,Q_inf,Cl_0, ...
-    Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
+    Cl_alpha, Cl_delta,theta,delta_l,delta_r,delta_t);
 
 % Coefficients calculation
 [coef_3] = coefficients(rho,y,y_h,x_c,y_c, ...
     z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_3,b,b_h, S_w, S_h, ...
-    theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
+    theta,Cd_0,Cd_Cl,m_chord_w,m_chord_h,Cm_delta,Cm_025,delta_l,delta_r,delta_t);
 
-Cl_c_3(:,i) = coef_3.Cl_c_wing;
-Cl_c_tail_3(:,i) = coef_3.Cl_c_tail;
+Cl_c_3 = coef_3.Cl_c_wing;
+Cl_c_tail_3 = coef_3.Cl_c_tail;
+CM_3 = coef_3.Cm_0_ala;
+CM_tail_3 = coef_3.Cm_0_tail;
+CL_3 = coef_3.CL_wing;
+CL_Tail_3 = coef_3.CL_tail;
+CM_Roll_ala = coef_3.Cm_roll_ala;
+CM_roll_tail = coef_3.Cm_roll_tail;
 
 %% CODE END
 %% TEST
