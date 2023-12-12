@@ -93,7 +93,7 @@ m_chord_h = (2/3)*c_r_h*((1+lambda_h+lambda_h^2)/(1+lambda_h));
 %% PART 1
 
 % Preallocating
-theta = linspace(-5,5,10);
+theta = linspace(-5,5,11);
 twist = theta;
 theta_t = zeros(length(theta),1);
 theta_dis = zeros(N_w,1);
@@ -245,8 +245,17 @@ for i = 1:length(delta_t)
 
 Cl_c_2(:,i) = coef_2.Cl_c_wing;
 Cl_c_tail_2(:,i) = coef_2.Cl_c_tail;
+CL_2(i) = coef_2.CL_wing;
+CL_tail_2(i) = coef_2.CL_tail;
 CM_2(:,i) = coef_2.Cm_0_ala;
 CM_tail_2(:,i) = coef_2.Cm_0_tail;
+L_2(i) = CL_2(i)*(0.5*rho*(norm(Q_inf))^2*S_w);
+L_tail_2(i) = CL_tail_2(i)*(0.5*rho*(norm(Q_inf))^2*S_h);
+M_2(i) = CM_2(:,i)*(0.5*rho*(norm(Q_inf))^2*S_w*m_chord_w);
+M_tail_2(i) = CM_tail_2(:,i)*(0.5*rho*(norm(Q_inf))^2*S_h*m_chord_h);
+
+CL_total2(i) = (L_2(i)+L_tail_2(i))*(0.5*rho*(norm(Q_inf))^2*S_w);
+Cm_total2(i) = (M_2(i)+M_tail_2(i))/(0.5*rho*(norm(Q_inf))^2*S_w*m_chord_w);
 end
 %% Part 3
 
