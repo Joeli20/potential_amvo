@@ -157,13 +157,12 @@ for i=1:length(theta)
         Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
     
     % Coefficients calculation
-    [coef] = coefficients(rho,y,y_h,x_c,y_c, ...
+    [L_total(i,1),L_h(i,1),Cl_c,L_w(i,1),CL_wing, CL_tail, Cl_c_tail, CD_v_wing, cd_wing, cd_tail, ...
+        ,, , ,, ,, , Cd_v_tail, ...
+        alpha_i_wing, alpha_i_tail, Cm_0_ala, Cm_0_tail, e_w(i,1), e_h(i,1), Cm_roll_ala, ...
+        Cm_roll_cua,M_roll_ala,M_roll_cua,N_pitch_cua,Cn_pitch_cua] = coefficients(rho,y,y_h,x_c,y_c, ...
         z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma,b,b_h, S_w, S_h, ...
         theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
-
-    L_total(i,1) = coef.L_total;
-    e_w(i,1) = coef.Effi_ala;
-    Cl_c = coef.Cl_c_wing;
 
     if e_w(i,1)>Trigger
         Trigger = e_w(i,1);
@@ -171,7 +170,7 @@ for i=1:length(theta)
         THETA_T = theta_t(i,1);
         THETA_T_d = rad2deg(THETA_T);
         Cl_c_bo = Cl_c;
-        L = L_total(i,1);
+        L_total_bo = L_total(i,1);
     end
 end
 
@@ -207,7 +206,7 @@ end
 
 %[gamma, V_ij] = gamma_horsehoe_2 (c,c_h, V_inf_1_1,V_inf_2_1, V_inf_1_2,V_inf_2_2, V_inf_1_3,V_inf_2_3, V_inf_1_4,V_inf_2_4,V_AB_1,V_AB_2,V_AB_3,V_AB_4,N_ala,N_cua,N_alerons,AoA,AoA_t,Q_inf,CL_0,CL_alpha, CL_delta);
 
-%[coef] = coefficients(rho,y,y_h,x_c,y_c,z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_ala,N_cua,CL_0,CL_alpha,gamma,b,b_h, S_wing, S_tail,theta,Cd_v0,Cd_v_Cl,M_chord_ala,M_chord_tail, Cm_025);
+%[L_total,L_tail,Cl_c,L_wing,CL_wing, CL_tail, Cl_c_tail, CD_v_wing, cd_wing, cd_tail, CD_v_tail,CD_i_wing, CD_i_tail, CD_wing,CD_tail, Cd_i_wing,Cd_i_tail, Cd_v_wing,Cd_v_tail, alpha_i_wing,alpha_i_tail,Cm_0_ala,Cm_0_tail,Effi_ala,Effi_tail,Cm_roll_ala,Cm_roll_cua,M_roll_ala,M_roll_cua,N_pitch_cua,Cn_pitch_cua] = coefficients(rho,y,y_h,x_c,y_c,z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_ala,N_cua,CL_0,CL_alpha,gamma,b,b_h, S_wing, S_tail,theta,Cd_v0,Cd_v_Cl,M_chord_ala,M_chord_tail, Cm_025);
 %for i = 1:N_ala
 %gamma_a(i,1) = gamma(i,1);
 %end
