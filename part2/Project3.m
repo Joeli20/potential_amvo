@@ -25,7 +25,7 @@ Cl_0 = 0; % NACA 0010
 Cl_alpha = 6.7265; % NACA 0010
 Cl_delta = 4.1554; % NACA 0015
 
-N = 128; % Sections INPUT
+N = 256; % Sections INPUT
 N_w = N; % Wing sections
 N_h = N/2; % Tail sections
 N_a = round((N_w/2)*3/2); % Number of ailerons
@@ -40,7 +40,7 @@ y = linspace(-b/2,b/2,N_w+1);
 z = linspace(0,0,N_w+1);
 x_h = linspace(3,3,N_h+1);
 y_h = linspace(-b_h/2,b_h/2,N_h+1);
-z_h = linspace(0.05,0.05,N_h+1);
+z_h = linspace(-0.05,-0.05,N_h+1);
 x_c = zeros(N_w,1);
 y_c = zeros(N_w,1);
 z_c = zeros(N_w,1);
@@ -92,7 +92,7 @@ m_chord_h = (2/3)*c_r_h*((1+lambda_h+lambda_h^2)/(1+lambda_h));
 %% PART 1
 
 % Preallocating
-theta = linspace(-6,6,10);
+theta = linspace(-6,6,12);
 theta_t = zeros(length(theta),1);
 theta_dis = zeros(N_w,1);
 L_total = zeros(length(theta),1);
@@ -127,7 +127,7 @@ for i=1:length(theta)
     delta_r = 0;
     delta_t = 0;
     AoA_d = 4;
-    AoA_d_t = 4-i_h;
+    AoA_d_t = 4+i_h;
     AoA = AoA_d*(pi/180);
     AoA_t = AoA_d_t*(pi/180);
     Q_inf(1,1) = 1*cos(AoA);
@@ -145,10 +145,10 @@ for i=1:length(theta)
     [V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
     [V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
     % Tail-Wing
-    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA_t);
+    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
     [V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
     % Tail-Tail
-    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA_t);
+    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
     [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
     % Gamma calculation
@@ -158,12 +158,13 @@ for i=1:length(theta)
     
     % Coefficients calculation
     [coef] = coefficients(rho,y,y_h,x_c,y_c, ...
-        z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma,b,b_h, S_w, S_h, ...
+        z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma(:,i),b,b_h, S_w, S_h, ...
         theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
 
     L_total(i,1) = coef.L_total;
     e_w(i,1) = coef.Effi_ala;
-    Cl_c = coef.Cl_c_wing;
+    Cl_c(:,i) = coef.Cl_c_wing;
+    Cl_c_tail(:,i) = coef.Cl_c_tail;
 
     if e_w(i,1)>Trigger
         Trigger = e_w(i,1);
@@ -184,7 +185,7 @@ end
     delta_r = 0;
     delta_t = deg2rad(15);
     AoA_d = 4;
-    AoA_d_t = 4-i_h;
+    AoA_d_t = 4+i_h;
     AoA = AoA_d*(pi/180);
     AoA_t = AoA_d_t*(pi/180);
     Q_inf(1,1) = 1*cos(AoA);
@@ -204,10 +205,10 @@ end
     [V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
     [V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
     % Tail-Wing
-    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA_t);
+    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
     [V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
     % Tail-Tail
-    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA_t);
+    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
     [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
     % Gamma calculation
@@ -229,7 +230,7 @@ end
     delta_r = deg2rad(10);
     delta_t = deg2rad(0);
     AoA_d = 4;
-    AoA_d_t = 4-i_h;
+    AoA_d_t = 4+i_h;
     AoA = AoA_d*(pi/180);
     AoA_t = AoA_d_t*(pi/180);
     Q_inf(1,1) = 1*cos(AoA);
@@ -249,10 +250,10 @@ end
     [V_inf_1_2, V_inf_2_2] = inf_vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h,AoA);
     [V_AB_2] = vortex_line(x_h,y_h,z_h,x_c,y_c,z_c,N_w,N_h);
     % Tail-Wing
-    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA_t);
+    [V_inf_1_3, V_inf_2_3] = inf_vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w,AoA);
     [V_AB_3] = vortex_line(x,y,z,x_c_h,y_c_h,z_c_h,N_h,N_w);
     % Tail-Tail
-    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA_t);
+    [V_inf_1_4, V_inf_2_4] = inf_vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h,AoA);
     [V_AB_4] = vortex_line(x_h,y_h,z_h,x_c_h,y_c_h,z_c_h,N_h,N_h);
 
     % Gamma calculation
@@ -261,7 +262,7 @@ end
         Cl_alpha, Cl_delta,theta_dis,delta_l,delta_r,delta_t);
     
     % Coefficients calculation
-    [coef_2] = coefficients(rho,y,y_h,x_c,y_c, ...
+    [coef_3] = coefficients(rho,y,y_h,x_c,y_c, ...
         z_c,x_c_h,y_c_h,z_c_h,c,c_h,Q_inf,AoA, AoA_t,N_w,N_h,Cl_0,Cl_alpha,gamma_3,b,b_h, S_w, S_h, ...
         theta_dis,Cd_0,Cd_Cl,m_chord_w,m_chord_h, Cm_025);
 
